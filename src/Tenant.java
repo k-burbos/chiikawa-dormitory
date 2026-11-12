@@ -19,6 +19,9 @@ public class Tenant extends Chiikawas {
         this.bill = bill;
     }
 
+    public int getRoomNumber() {
+        return roomNumber;
+    }
     public void receiveMaintenance() {
 
     }
