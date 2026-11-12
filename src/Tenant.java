@@ -1,8 +1,8 @@
 public class Tenant extends Chiikawas {
-    private int roomNumber;
+    private Room roomNumber;
     private double bill;
 
-    public Tenant(String name, int age, int roomNumber) {
+    public Tenant(String name, int age, Room roomNumber) {
         super(name, age);
         this.roomNumber = roomNumber;
         bill = 0;
@@ -19,7 +19,7 @@ public class Tenant extends Chiikawas {
         this.bill = bill;
     }
 
-    public int getRoomNumber() {
+    public Room getRoomNumber() {
         return roomNumber;
     }
     public void receiveMaintenance() {
