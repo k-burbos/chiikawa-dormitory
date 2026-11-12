@@ -1,6 +1,11 @@
-public class Chiikawa {
+public class Chiikawas {
     private String name;
     private int age;
+
+    public Chiikawas(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
 
     public int getAge() {
         return age;
