@@ -3,20 +3,20 @@ public class Transaction {
     private Payment payment;
     private double amount;
 
-    public Transaction(Tenant tenant, double amount, Payment payment) {
-        if (tenant == null || payment == null) {
+    // Constructors
+    public Transaction(Tenant tenant, double amount, Payment payment){
+        if(tenant == null || payment == null){
             throw new IllegalArgumentException("Tenant and payment are required.");
         }
-
-        if (amount <= 0) {
+        if (amount <= 0){
             throw new IllegalArgumentException("Amount must be greater than zero.");
         }
-
         this.tenant = tenant;
-        this.amount = amount;
         this.payment = payment;
+        this.amount = amount;
     }
 
+    // Getter Methods
     public Tenant getTenant() {
         return tenant;
     }
@@ -29,6 +29,7 @@ public class Transaction {
         return amount;
     }
 
+    // Setter Methods
     public void setTenant(Tenant tenant) {
         this.tenant = tenant;
     }
@@ -41,6 +42,7 @@ public class Transaction {
         this.amount = amount;
     }
 
+    // =========================== Methods =====================
     public String processPayment() {
         return payment.pay();
     }
