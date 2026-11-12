@@ -13,11 +13,23 @@ public class Transaction {
         return tenant;
     }
 
-    public String getModePayment(){
+    public string getModePayment(){
         return modePayment;
     }
 
     public double getAmount(){
         return amount;
+    }
+
+    public void setTenant(Tenant tenant){
+        this.tenant = tenant;
+    }
+
+    public void setModePayment(string modePayment){
+        this.modePayment = modePayment;
+    }
+
+    public void setAmount(double amount){
+        this.amount = amount;
     }
 }
