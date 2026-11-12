@@ -8,4 +8,16 @@ public class Transaction {
         this.modePayment = modePayment;
         this.amount = amount;
     }
+
+    public Tenant getTenant(){
+        return tenant;
+    }
+
+    public String getModePayment(){
+        return modePayment;
+    }
+
+    public double getAmount(){
+        return amount;
+    }
 }
