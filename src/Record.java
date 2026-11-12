@@ -2,10 +2,10 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class Record {
-    private ArrayList<Room> rooms = new ArrayList<>();
+//    private ArrayList<Room> rooms = new ArrayList<>();
 
-    public void addRecord(){
-
+    public void addRecord(Room[] rooms){
+        //ADD FILENAME
         try (BufferedWriter bw = new BufferedWriter(new FileWriter("", true))){
             for(Room r: rooms){
                 bw.write(r.toString());
@@ -16,6 +16,7 @@ public class Record {
         }
     }
     public void showRecord(){
+        //ADD FILENAME
         try (BufferedReader br = new BufferedReader(new FileReader())){
             String line;
             while((line = br.readLine())!=null){
@@ -26,8 +27,12 @@ public class Record {
         }
     }
 
-    public void deleteRecord(){
+    public void deleteRecord(int roomNumber){
+        //ADD FILENAME
+        try(BufferedWriter bw = new BufferedWriter(new FileWriter(), true)){
 
-
+        } catch (IOException e){
+            e.printStackTrace();
+        }
     }
 }

@@ -1,4 +1,4 @@
-import java.util.Scanner
+import java.util.Scanner;
 public class Room {
 //    TransactionR tRecord;
     private static int roomNumber = 0;
