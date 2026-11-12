@@ -1,4 +1,4 @@
-import java.util.Scanner
+import java.util.Scanner;
 public class Room {
 //    TransactionR tRecord;
     private static int roomNumber = 0;
@@ -13,7 +13,7 @@ public class Room {
         noOfBed = 1;
         bed = new String[noOfBed];
         isAvailable = new Tenant[1];
-        isAvailable[1] = p;
+        isAvailable[0] = p;
         ++roomNumber;
     }
     public Room(Tenant[] p, int noOfBed){
