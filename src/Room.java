@@ -1,23 +1,29 @@
 import java.util.Scanner
 public class Room {
 //    TransactionR tRecord;
-//    Tenant[] isAvailable;
-    int kitchen, diningRoom, livingRoom, noOfBed;
+    private static int roomNumber = 0;
+    Tenant[] isAvailable;
+    private int kitchen, diningRoom, livingRoom, noOfBed;
     String[] bed;
     //noOfBed is the number of bedrooms
-    public Room(){
+    public Room(Tenant p){
         kitchen = 1;
         diningRoom = 1;
         livingRoom = 1;
         noOfBed = 1;
         bed = new String[noOfBed];
+        isAvailable = new Tenant[1];
+        isAvailable[1] = p;
+        ++roomNumber;
     }
-    public Room(int noOfBed){
+    public Room(Tenant[] p, int noOfBed){
         kitchen = 1;
         diningRoom = 1;
         livingRoom = 1;
         this.noOfBed = noOfBed;
+        isAvailable = p;
         bed = whatBeds(noOfBed);
+        ++roomNumber;
     }
     private String[] whatBeds(int noOfBed){
         Scanner s = new Scanner(System.in);
@@ -27,5 +33,4 @@ public class Room {
         }
         return whatBeds;
     }
-
 }

@@ -1,4 +1,4 @@
-public class Chiikawas {
+public abstract class Chiikawas {
     private String name;
     private int age;
 
