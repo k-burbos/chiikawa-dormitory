@@ -14,6 +14,7 @@ public class Room {
         bed = new String[noOfBed];
         isAvailable = new Tenant[1];
         isAvailable[1] = p;
+        ++roomNumber;
     }
     public Room(Tenant[] p, int noOfBed){
         kitchen = 1;
@@ -22,6 +23,7 @@ public class Room {
         this.noOfBed = noOfBed;
         isAvailable = p;
         bed = whatBeds(noOfBed);
+        ++roomNumber;
     }
     private String[] whatBeds(int noOfBed){
         Scanner s = new Scanner(System.in);
