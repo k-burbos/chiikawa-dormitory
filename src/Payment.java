@@ -1,2 +1,3 @@
-public class Payment {
+public abstract class Payment {
+    public abstract String pay();
 }
