@@ -19,8 +19,11 @@ public class Admin extends Chiikawas{
 
     }
 
-    public void removeTenant(Tenant tenant){
-
+    public void removeTenant(Tenant tenant, Room[] rooms){
+//        for(Room r: rooms){
+//            if(r != null && r.toString().split(",")[0].equals(tenant.getName())){
+//            }
+//        }
     }
 
 }

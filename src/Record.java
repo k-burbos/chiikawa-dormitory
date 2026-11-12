@@ -6,7 +6,8 @@ public class Record {
 
     public void addRecord(Room[] rooms){
         //ADD FILENAME
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter("", true))){
+        File records = new File("records.txt");
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("records.txt", true))){
             for(Room r: rooms){
                 bw.write(r.toString());
                 bw.newLine();
@@ -17,7 +18,7 @@ public class Record {
     }
     public void showRecord(){
         //ADD FILENAME
-        try (BufferedReader br = new BufferedReader(new FileReader())){
+        try (BufferedReader br = new BufferedReader(new FileReader("records.txt"))){
             String line;
             while((line = br.readLine())!=null){
                 System.out.println(line);
@@ -29,7 +30,7 @@ public class Record {
 
     public void deleteRecord(int roomNumber){
         //ADD FILENAME
-        try(BufferedWriter bw = new BufferedWriter(new FileWriter(), true)){
+        try(BufferedWriter bw = new BufferedWriter(new FileWriter("records.txt", true))){
 
         } catch (IOException e){
             e.printStackTrace();
