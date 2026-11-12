@@ -22,7 +22,7 @@ public class Tenant extends Chiikawas {
     public Room getRoomNumber() {
         return roomNumber;
     }
-    public void receiveMaintenance() {
+    public void requestMaintenance() {
 
     }
 
