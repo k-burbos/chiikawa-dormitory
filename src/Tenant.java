@@ -11,6 +11,10 @@ public class Tenant extends Chiikawas {
     public void payRent() {
     }
 
+    public double getBill() {
+        return bill;
+    }
+
     public void receiveBill(double bill) {
         this.bill = bill;
     }
@@ -25,9 +29,9 @@ public class Tenant extends Chiikawas {
         }
     }
 
-    public static class Furohonya extends Tenant {
-        public Furohonya(int roomNumber, int age) {
-            super("Furohonya", age, roomNumber);
+    public static class Furuhonya extends Tenant {
+        public Furuhonya(int roomNumber, int age) {
+            super("Furuhonya", age, roomNumber);
         }
     }
 
