@@ -1,8 +1,10 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 public class Room {
 //    TransactionR tRecord;
     private static int roomNumber = 0;
-    Tenant[] isAvailable;
+    private List<Tenant> isAvailable = new ArrayList<>();
     private int kitchen, diningRoom, livingRoom, noOfBed;
     String[] bed;
     //noOfBed is the number of bedrooms
@@ -12,8 +14,7 @@ public class Room {
         livingRoom = 1;
         noOfBed = 1;
         bed = new String[noOfBed];
-        isAvailable = new Tenant[1];
-        isAvailable[0] = p;
+        isAvailable.add(p);
         ++roomNumber;
     }
     public Room(Tenant[] p, int noOfBed){
@@ -21,8 +22,9 @@ public class Room {
         diningRoom = 1;
         livingRoom = 1;
         this.noOfBed = noOfBed;
-        isAvailable = p;
-        bed = whatBeds(noOfBed);
+        for(Tenant toAdd : p){
+            isAvailable.add(toAdd);
+        }
         ++roomNumber;
     }
     private String[] whatBeds(int noOfBed){
