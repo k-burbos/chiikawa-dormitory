@@ -1,35 +1,35 @@
 public class Transaction {
     private Tenant tenant;
-    private string modePayment;
+    private String modePayment;
     private double amount;
 
-    public Transaction(Tenant tenant, double amount, string modePayment){
+    public Transaction(Tenant tenant, double amount, String modePayment) {
         this.tenant = tenant;
-        this.modePayment = modePayment;
         this.amount = amount;
+        this.modePayment = modePayment;
     }
 
-    public Tenant getTenant(){
+    public Tenant getTenant() {
         return tenant;
     }
 
-    public string getModePayment(){
+    public String getModePayment() {
         return modePayment;
     }
 
-    public double getAmount(){
+    public double getAmount() {
         return amount;
     }
 
-    public void setTenant(Tenant tenant){
+    public void setTenant(Tenant tenant) {
         this.tenant = tenant;
     }
 
-    public void setModePayment(string modePayment){
+    public void setModePayment(String modePayment) {
         this.modePayment = modePayment;
     }
 
-    public void setAmount(double amount){
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 }
