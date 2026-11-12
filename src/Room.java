@@ -36,5 +36,14 @@ public class Room {
         return whatBeds;
     }
 
+    @Override
+    public String toString(){
+
+        StringBuilder sb = new StringBuilder("");
+        for(Tenant p : isAvailable){
+            sb.append(p.getName()+",");
+        }
+        return roomNumber + "," + noOfBed + "LDK,"+sb;
+    }
 
 }
