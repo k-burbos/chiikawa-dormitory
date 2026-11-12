@@ -1,2 +1,5 @@
-public class Cash {
+public class Cash extends Payment {
+    public String pay(){
+        return "Cash";
+    }
 }

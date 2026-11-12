@@ -8,19 +8,19 @@ public class Record {
     private ArrayList<Room> rooms = new ArrayList<>();
 
     public void showRecord(){
-
-        try (BufferedReader br = new BufferedReader(new FileReader(/*filename*/))){
-            String line;
-            while((line = br.readLine())!=null){
-                System.out.prinln(line);
-            }
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+//
+//        try (BufferedReader br = new BufferedReader(new FileReader(/*filename*/))){
+//            String line;
+//            while((line = br.readLine())!=null){
+//                System.out.prinln(line);
+//            }
+//        } catch (IOException e){
+//            e.printStackTrace();
+//        }
     }
 
     public void deleteRecord(){
 
-        
+
     }
 }

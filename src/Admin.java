@@ -1,5 +1,9 @@
-public class Admin extends Chiikawa{
+public class Admin extends Chiikawas{
     private Record record;
+
+    public Admin(String name, int age) {
+        super(name, age);
+    }
 
     public void setBill(Tenant tenant){
         float bill = tenant.getBill();
