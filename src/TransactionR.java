@@ -9,7 +9,7 @@ public class TransactionR {
         this.tRecord = tRecord == null ? new Transaction[0] : tRecord;
     }
 
-    public Transaction[] getTRecord() {
+    public Transaction[] getRecord() {
         return tRecord;
     }
 
