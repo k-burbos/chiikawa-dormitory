@@ -13,7 +13,7 @@ public class GameRunning extends JFrame{
     private JPanel spriteTalks;
     private JPanel optionYesNo;
     private ArrayList<Tenant> Chii = new ArrayList<>();
-
+    private ArrayList<Room> Rooms = new ArrayList<>();
     public GameRunning(){
         cardLayout = new CardLayout();
         cardContainer = new JPanel(cardLayout);
@@ -24,6 +24,7 @@ public class GameRunning extends JFrame{
         cardContainer.add(optionYesNo, "OptionYesNo");
         setContentPane(cardContainer);
         populateTenants(); // populate the tenants
+        populateRooms();
     }
 
     void populateTenants() {
@@ -35,6 +36,12 @@ public class GameRunning extends JFrame{
         Chii.add(new Tenant.Kurimanju());
         Chii.add(new Tenant.Shisa());
         Chii.add(new Tenant.Rakko());
+    }
+
+    void populateRooms() {
+        Rooms.add(new Room.singleRoom());
+        Rooms.add(new Room.doubleRoom());
+        Rooms.add(new Room.quadRoom());
     }
 
     public static void main(String[] args) {
