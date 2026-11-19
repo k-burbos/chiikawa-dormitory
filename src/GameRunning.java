@@ -31,14 +31,15 @@ public class GameRunning extends JFrame{
     }
 
     void populateTenants() {
-        Chii.add(new Tenant.Chiikawa());
-        Chii.add(new Tenant.Momonga());
-        Chii.add(new Tenant.Hachiware());
-        Chii.add(new Tenant.Usagi());
-        Chii.add(new Tenant.Furuhonya());
-        Chii.add(new Tenant.Kurimanju());
-        Chii.add(new Tenant.Shisa());
-        Chii.add(new Tenant.Rakko());
+        ChiikawaFactory cf = new ChiikawaFactory();
+        Chii.add(cf.createChiikawa("Chiikawa"));
+        Chii.add(cf.createChiikawa("Hachiware"));
+        Chii.add(cf.createChiikawa("Usagi"));
+        Chii.add(cf.createChiikawa("Momonga"));
+        Chii.add(cf.createChiikawa("Rakko"));
+        Chii.add(cf.createChiikawa("Kurimanju"));
+        Chii.add(cf.createChiikawa("Shisa"));
+        Chii.add(cf.createChiikawa("Furuhonya"));
     }
 
     void populateRooms() {
