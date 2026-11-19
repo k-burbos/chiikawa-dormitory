@@ -9,11 +9,14 @@ public class startScreen extends JFrame {
     private JButton playButton;
     private JButton exitButton;
     private JButton creditButton;
-    private JButton button2;
 
     public startScreen() {
         title.setFont(loadFont("/Fonts/BaksoSapi.otf", 36f));
         title.setForeground(Color.BLACK);
+        playButton.addActionListener(e -> {
+            dispose();
+            GameRunning.main(new String[]{});
+        });
     }
 
     public static void main(String[] args) {

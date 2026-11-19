@@ -6,15 +6,19 @@ public class TransactionR {
     }
 
     public TransactionR(Transaction[] tRecord) {
-        this.tRecord = tRecord == null ? new Transaction[0] : tRecord;
+        setRecord(tRecord);
     }
 
     public Transaction[] getRecord() {
-        return tRecord;
+        return tRecord.clone();
     }
 
     public void setRecord(Transaction[] tRecord) {
-        this.tRecord = tRecord == null ? new Transaction[0] : tRecord;
+        if (tRecord == null) {
+            this.tRecord = new Transaction[0];
+        } else {
+            this.tRecord = tRecord.clone();
+        }
     }
 
     public void addTransaction(Transaction transaction) {
@@ -22,17 +26,26 @@ public class TransactionR {
             throw new IllegalArgumentException("Transaction cannot be null.");
         }
 
-        Transaction[] updatedRecord = new Transaction[tRecord.length + 1];
+        Transaction[] updatedRecord =
+                new Transaction[tRecord.length + 1];
 
-        for (int i = 0; i < tRecord.length; i++) {
-            updatedRecord[i] = tRecord[i];
-        }
+        System.arraycopy(
+                tRecord,
+                0,
+                updatedRecord,
+                0,
+                tRecord.length
+        );
 
         updatedRecord[tRecord.length] = transaction;
         tRecord = updatedRecord;
     }
 
     public boolean removeTransaction(Transaction transaction) {
+        if (transaction == null) {
+            return false;
+        }
+
         int index = -1;
 
         for (int i = 0; i < tRecord.length; i++) {
@@ -46,13 +59,24 @@ public class TransactionR {
             return false;
         }
 
-        Transaction[] updatedRecord = new Transaction[tRecord.length - 1];
+        Transaction[] updatedRecord =
+                new Transaction[tRecord.length - 1];
 
-        for (int i = 0, j = 0; i < tRecord.length; i++) {
-            if (i != index) {
-                updatedRecord[j++] = tRecord[i];
-            }
-        }
+        System.arraycopy(
+                tRecord,
+                0,
+                updatedRecord,
+                0,
+                index
+        );
+
+        System.arraycopy(
+                tRecord,
+                index + 1,
+                updatedRecord,
+                index,
+                tRecord.length - index - 1
+        );
 
         tRecord = updatedRecord;
         return true;
@@ -60,5 +84,13 @@ public class TransactionR {
 
     public int getTransactionCount() {
         return tRecord.length;
+    }
+
+    public boolean isEmpty() {
+        return tRecord.length == 0;
+    }
+
+    public void clearTransactions() {
+        tRecord = new Transaction[0];
     }
 }

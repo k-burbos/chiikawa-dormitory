@@ -3,20 +3,12 @@ public class Transaction {
     private Payment payment;
     private double amount;
 
-    // Constructors
-    public Transaction(Tenant tenant, double amount, Payment payment){
-        if(tenant == null || payment == null){
-            throw new IllegalArgumentException("Tenant and payment are required.");
-        }
-        if (amount <= 0){
-            throw new IllegalArgumentException("Amount must be greater than zero.");
-        }
-        this.tenant = tenant;
-        this.payment = payment;
-        this.amount = amount;
+    public Transaction(Tenant tenant, double amount, Payment payment) {
+        setTenant(tenant);
+        setAmount(amount);
+        setPayment(payment);
     }
 
-    // Getter Methods
     public Tenant getTenant() {
         return tenant;
     }
@@ -29,21 +21,37 @@ public class Transaction {
         return amount;
     }
 
-    // Setter Methods
     public void setTenant(Tenant tenant) {
+        if (tenant == null) {
+            throw new IllegalArgumentException("Tenant cannot be null.");
+        }
         this.tenant = tenant;
     }
 
     public void setPayment(Payment payment) {
+        if (payment == null) {
+            throw new IllegalArgumentException("Payment cannot be null.");
+        }
         this.payment = payment;
     }
 
     public void setAmount(double amount) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Amount must be greater than zero.");
+        }
         this.amount = amount;
     }
 
-    // =========================== Methods =====================
     public String processPayment() {
         return payment.pay();
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "tenant=" + tenant +
+                ", amount=" + amount +
+                ", payment=" + payment.getClass().getSimpleName() +
+                '}';
     }
 }
