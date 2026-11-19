@@ -66,7 +66,7 @@ public class GameRunning extends JFrame{
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 if(bgIcon!=null) g.drawImage(bgIcon.getImage(), 0, 0, getWidth(), getHeight(), this);
-                if(spriteIcon!=null) g.drawImage(spriteIcon.getImage(),0, 0, this);
+                if(spriteIcon!=null) g.drawImage(spriteIcon.getImage(),336,  95, 340, 340,this);
                 if(tableIcon!=null) g.drawImage(tableIcon.getImage(),0,  10, getWidth(), getHeight(), this);
                 if(computerIcon!=null) g.drawImage(computerIcon.getImage(),0,  10, getWidth(), getHeight(), this);
             }
