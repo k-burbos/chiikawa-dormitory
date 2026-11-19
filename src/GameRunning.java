@@ -24,7 +24,8 @@ public class GameRunning extends JFrame{
 //        a.setContentPane(a.cardContainer);
         a.setDefaultCloseOperation(EXIT_ON_CLOSE);
         a.setVisible(true);
-        a.setSize(735, 455);
+        a.setSize(1920, 1080);
+        a.setResizable(false);
         a.setTitle("Chiikawa Dormitory");
     }
 
@@ -40,7 +41,7 @@ public class GameRunning extends JFrame{
         URL computerUrl = getClass().getResource("/Images/Elements/bsComputer.png");
         ImageIcon computerIcon = (computerUrl != null) ? new ImageIcon(computerUrl) : null;
 
-        URL sprite = getClass().getResource("/Images/ChiikawasSprites/chiikawaHappy_1.png");
+        URL sprite = getClass().getResource("/Images/ChiikawasSprites/chiikawaAsking_1.png");
         ImageIcon spriteIcon = (sprite != null) ? new ImageIcon(sprite) : null;
 
 
@@ -66,7 +67,17 @@ public class GameRunning extends JFrame{
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 if(bgIcon!=null) g.drawImage(bgIcon.getImage(), 0, 0, getWidth(), getHeight(), this);
-                if(spriteIcon!=null) g.drawImage(spriteIcon.getImage(),336,  95, 340, 340,this);
+                if (spriteIcon != null) {
+                    int x = (int) (getWidth() * 0.457f);
+                    int y = (int) (getHeight() * 0.209f);
+
+                    int width = (int) (getWidth() * 0.463f);
+                    int height = (int) (getHeight() * 0.747f);
+
+                    g.drawImage(spriteIcon.getImage(),
+                            x, y, width, height, this);
+                }
+
                 if(tableIcon!=null) g.drawImage(tableIcon.getImage(),0,  10, getWidth(), getHeight(), this);
                 if(computerIcon!=null) g.drawImage(computerIcon.getImage(),0,  10, getWidth(), getHeight(), this);
             }
