@@ -24,7 +24,7 @@ public class startScreen extends JFrame {
         a.setContentPane(a.panel1);
         a.setDefaultCloseOperation(EXIT_ON_CLOSE);
         a.setVisible(true);
-        a.setSize(735, 455);
+        a.setSize(1920, 1080);
         a.setTitle("Chiikawa Dormitory");
     }
 

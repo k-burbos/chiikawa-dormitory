@@ -8,6 +8,10 @@ public class Tenant extends Chiikawas {
         bill = 0;
     }
 
+    public void askForDorm() {
+
+    }
+
     public void payRent() {
     }
 
