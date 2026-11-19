@@ -11,6 +11,7 @@ public class GameRunning extends JFrame{
     private JPanel spriteEnter;
     private JPanel spriteTalks;
     private JPanel optionYesNo;
+    private JLabel optnYes;
 
     public GameRunning(){
         cardLayout = new CardLayout();
@@ -184,6 +185,13 @@ public class GameRunning extends JFrame{
                 if(optionBtnIcon!=null) g.drawImage(optionBtnIcon.getImage(), 1010, 850, 532, 156, this);
             }
         };
+        optionYesNo.setLayout(null);
+
+        optnYes = new JLabel("YES");
+        optnYes.setFont(new Font("/Fonts/BaksoSapi.otf", Font.BOLD, 24));
+        optnYes.setForeground(Color.WHITE);
+        optnYes.setBounds(430, 850, 500, 230);
+        optionYesNo.add(optnYes);
 
     }
 }
