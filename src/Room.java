@@ -5,11 +5,8 @@ public class Room {
     //    TransactionR tRecord;
     private static int roomNumber = 0;
     private List<Tenant> isAvailable = new ArrayList<>();
-    private int kitchen, diningRoom, livingRoom, noOfBed;
+    private int noOfBed;
     public Room(int noOfBed){
-        kitchen = 1;
-        diningRoom = 1;
-        livingRoom = 1;
         this.noOfBed = noOfBed;
         ++roomNumber;
     }
@@ -25,7 +22,9 @@ public class Room {
         }
     }
     public static class quadRoom extends Room {
-
+        public quadRoom(){
+            super(4);
+        }
     }
 
     @Override

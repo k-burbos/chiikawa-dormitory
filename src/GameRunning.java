@@ -10,6 +10,7 @@ public class GameRunning extends JFrame{
     private JPanel baseScreen;
     private JPanel spriteEnter;
     private JPanel spriteTalks;
+    private JPanel optionYesNo;
 
     public GameRunning(){
         cardLayout = new CardLayout();
@@ -18,6 +19,7 @@ public class GameRunning extends JFrame{
         cardContainer.add(baseScreen, "BaseScreen");
         cardContainer.add(spriteEnter, "SpriteEnter");
         cardContainer.add(spriteTalks, "SpriteTalks");
+        cardContainer.add(optionYesNo, "OptionYesNo");
         setContentPane(cardContainer);
     }
 
@@ -48,6 +50,9 @@ public class GameRunning extends JFrame{
 
         URL chatHead = getClass().getResource("/Images/Elements/bsChatHead.png");
         ImageIcon chatHeadIcon = (chatHead != null) ? new ImageIcon(chatHead) : null;
+
+        URL optionBtn = getClass().getResource("/Images/Elements/bsButton.png");
+        ImageIcon optionBtnIcon = (optionBtn != null) ? new ImageIcon(optionBtn) : null;
 
         baseScreen = new JPanel(){
 
@@ -130,9 +135,9 @@ public class GameRunning extends JFrame{
         });
         spriteTalks = new JPanel(){
             @Override
-            protected void paintComponent(Graphics g){
+            protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                if(bgIcon!=null) g.drawImage(bgIcon.getImage(), 0, 0, getWidth(), getHeight(), this);
+                if (bgIcon != null) g.drawImage(bgIcon.getImage(), 0, 0, getWidth(), getHeight(), this);
                 if (spriteIcon != null) {
                     int x = (int) (getWidth() * 0.457f);
                     int y = (int) (getHeight() * 0.209f);
@@ -144,12 +149,41 @@ public class GameRunning extends JFrame{
                             x, y, width, height, this);
                 }
 
-                if(tableIcon!=null) g.drawImage(tableIcon.getImage(),0,  10, getWidth(), getHeight(), this);
-                if(computerIcon!=null) g.drawImage(computerIcon.getImage(),0,  10, getWidth(), getHeight(), this);
-                if(chatHeadIcon!=null) g.drawImage(chatHeadIcon.getImage(), 0, 0, getWidth(), getHeight(), this);
+                if (tableIcon != null) g.drawImage(tableIcon.getImage(), 0, 10, getWidth(), getHeight(), this);
+                if (computerIcon != null) g.drawImage(computerIcon.getImage(), 0, 10, getWidth(), getHeight(), this);
+                if (chatHeadIcon != null) g.drawImage(chatHeadIcon.getImage(), 261, -80, 1124, 696, this);
             }
         };
 
+        spriteTalks.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                cardLayout.show(cardContainer, "OptionYesNo");
+            }
+        });
+        optionYesNo = new JPanel(){
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (bgIcon != null) g.drawImage(bgIcon.getImage(), 0, 0, getWidth(), getHeight(), this);
+                if (spriteIcon != null) {
+                    int x = (int) (getWidth() * 0.457f);
+                    int y = (int) (getHeight() * 0.209f);
+
+                    int width = (int) (getWidth() * 0.463f);
+                    int height = (int) (getHeight() * 0.747f);
+
+                    g.drawImage(spriteIcon.getImage(),
+                            x, y, width, height, this);
+                }
+
+                if (tableIcon != null) g.drawImage(tableIcon.getImage(), 0, 10, getWidth(), getHeight(), this);
+                if (computerIcon != null) g.drawImage(computerIcon.getImage(), 0, 10, getWidth(), getHeight(), this);
+                if (chatHeadIcon != null) g.drawImage(chatHeadIcon.getImage(), 261, -80, 1124, 696, this);
+                if(optionBtnIcon!=null) g.drawImage(optionBtnIcon.getImage(), 430, 850, 532, 156, this);
+                if(optionBtnIcon!=null) g.drawImage(optionBtnIcon.getImage(), 1010, 850, 532, 156, this);
+            }
+        };
 
     }
 }
