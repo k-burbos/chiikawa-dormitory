@@ -68,30 +68,41 @@ public class GameRunning extends JFrame{
             @Override
             public void mouseClicked(MouseEvent e) {
                 cardLayout.show(cardContainer, "SpriteEnter");
-//                JRadioButton one = new JRadioButton("1");
-//                JRadioButton two = new JRadioButton("2");
-//                JRadioButton three = new JRadioButton("3");
-//                ButtonGroup bedrooms = new ButtonGroup();
-//                bedrooms.add(one);
-//                bedrooms.add(two);
-//                bedrooms.add(three);
-//
-//                JPanel panel = new JPanel(new GridLayout(0, 1));
-//                panel.add(new JLabel("Choose number of bedrooms:"));
-//                panel.add(one);
-//                panel.add(two);
-//                panel.add(three);
-//
-//                panel.add(new JLabel("How many months?"));
-//                panel.add(new JTextField());
-//
-//                int result = JOptionPane.showConfirmDialog(
-//                        null,
-//                        panel,
-//                        "Transaction",
-//                        JOptionPane.OK_CANCEL_OPTION,
-//                        JOptionPane.PLAIN_MESSAGE
-//                );
+                JRadioButton one = new JRadioButton("Single");
+                JRadioButton two = new JRadioButton("Double");
+                JRadioButton four = new JRadioButton("Quad");
+                ButtonGroup bedrooms = new ButtonGroup();
+                bedrooms.add(one);
+                bedrooms.add(two);
+                bedrooms.add(four);
+
+                JPanel panel = new JPanel(new GridLayout(0, 1));
+                panel.add(new JLabel("Choose number of bedrooms:"));
+                panel.add(one);
+                panel.add(two);
+                panel.add(four);
+
+                panel.add(new JLabel("How many months?"));
+                panel.add(new JTextField());
+
+                int result = JOptionPane.showConfirmDialog(
+                        null,
+                        panel,
+                        "Transaction",
+                        JOptionPane.OK_CANCEL_OPTION,
+                        JOptionPane.PLAIN_MESSAGE
+                );
+                if(result == JOptionPane.OK_OPTION){
+                    System.out.println("User Pressed OK");
+                    ButtonModel roomChoice = bedrooms.getSelection();
+                    if(roomChoice == one){
+
+                    }
+                } else if(result == JOptionPane.CANCEL_OPTION){
+                    System.out.println("User Pressed Cancel");
+                } else {
+                    System.out.println("System Closed without selection");
+                }
             }
         });
 

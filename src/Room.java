@@ -2,38 +2,30 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 public class Room {
-//    TransactionR tRecord;
+    //    TransactionR tRecord;
     private static int roomNumber = 0;
     private List<Tenant> isAvailable = new ArrayList<>();
     private int kitchen, diningRoom, livingRoom, noOfBed;
-    String[] bed;
-    //noOfBed is the number of bedrooms
-    public Room(Tenant p){
-        kitchen = 1;
-        diningRoom = 1;
-        livingRoom = 1;
-        noOfBed = 1;
-        bed = new String[noOfBed];
-        isAvailable.add(p);
-        ++roomNumber;
-    }
-    public Room(Tenant[] p, int noOfBed){
+    public Room(int noOfBed){
         kitchen = 1;
         diningRoom = 1;
         livingRoom = 1;
         this.noOfBed = noOfBed;
-        for(Tenant toAdd : p){
-            isAvailable.add(toAdd);
-        }
         ++roomNumber;
     }
-    private String[] whatBeds(int noOfBed){
-        Scanner s = new Scanner(System.in);
-        String[] whatBeds = new String[noOfBed];
-        for(int i = 0; i < noOfBed ; i++){
-            whatBeds[i] = s.nextLine();
+
+    public static class singleRoom extends Room {
+        public singleRoom() {
+            super(1);
         }
-        return whatBeds;
+    }
+    public static class doubleRoom extends Room {
+        public doubleRoom(){
+            super(2);
+        }
+    }
+    public static class quadRoom extends Room {
+
     }
 
     @Override
