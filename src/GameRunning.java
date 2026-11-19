@@ -12,6 +12,11 @@ public class GameRunning extends JFrame{
     private JPanel spriteEnter;
     private JPanel spriteTalks;
     private JPanel optionYesNo;
+    private JLabel optnYes;
+
+    private ArrayList<Tenant> Chii = new ArrayList<>();
+    private ArrayList<Room> Rooms = new ArrayList<>();
+
     public GameRunning(){
         cardLayout = new CardLayout();
         cardContainer = new JPanel(cardLayout);
