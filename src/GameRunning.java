@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class GameRunning extends JFrame{
     private CardLayout cardLayout;
@@ -11,6 +12,7 @@ public class GameRunning extends JFrame{
     private JPanel spriteEnter;
     private JPanel spriteTalks;
     private JPanel optionYesNo;
+    private ArrayList<Tenant> Chii = new ArrayList<>();
 
     public GameRunning(){
         cardLayout = new CardLayout();
@@ -21,6 +23,18 @@ public class GameRunning extends JFrame{
         cardContainer.add(spriteTalks, "SpriteTalks");
         cardContainer.add(optionYesNo, "OptionYesNo");
         setContentPane(cardContainer);
+        populateTenants(); // populate the tenants
+    }
+
+    void populateTenants() {
+        Chii.add(new Tenant.Chiikawa());
+        Chii.add(new Tenant.Momonga());
+        Chii.add(new Tenant.Hachiware());
+        Chii.add(new Tenant.Usagi());
+        Chii.add(new Tenant.Furuhonya());
+        Chii.add(new Tenant.Kurimanju());
+        Chii.add(new Tenant.Shisa());
+        Chii.add(new Tenant.Rakko());
     }
 
     public static void main(String[] args) {
