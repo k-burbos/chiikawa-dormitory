@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class GameRunning extends JFrame{
     private CardLayout cardLayout;
@@ -11,8 +12,13 @@ public class GameRunning extends JFrame{
     private JPanel spriteEnter;
     private JPanel spriteTalks;
     private JPanel optionYesNo;
+<<<<<<< HEAD
     private JLabel optnYes;
 
+=======
+    private ArrayList<Tenant> Chii = new ArrayList<>();
+    private ArrayList<Room> Rooms = new ArrayList<>();
+>>>>>>> 587e09207a2c932d6554ac60eb8c64558242e84c
     public GameRunning(){
         cardLayout = new CardLayout();
         cardContainer = new JPanel(cardLayout);
@@ -22,6 +28,25 @@ public class GameRunning extends JFrame{
         cardContainer.add(spriteTalks, "SpriteTalks");
         cardContainer.add(optionYesNo, "OptionYesNo");
         setContentPane(cardContainer);
+        populateTenants(); // populate the tenants
+        populateRooms();
+    }
+
+    void populateTenants() {
+        Chii.add(new Tenant.Chiikawa());
+        Chii.add(new Tenant.Momonga());
+        Chii.add(new Tenant.Hachiware());
+        Chii.add(new Tenant.Usagi());
+        Chii.add(new Tenant.Furuhonya());
+        Chii.add(new Tenant.Kurimanju());
+        Chii.add(new Tenant.Shisa());
+        Chii.add(new Tenant.Rakko());
+    }
+
+    void populateRooms() {
+        Rooms.add(new Room.singleRoom());
+        Rooms.add(new Room.doubleRoom());
+        Rooms.add(new Room.quadRoom());
     }
 
     public static void main(String[] args) {
@@ -69,6 +94,34 @@ public class GameRunning extends JFrame{
             @Override
             public void mouseClicked(MouseEvent e) {
                 cardLayout.show(cardContainer, "SpriteEnter");
+            }
+        });
+
+        spriteEnter = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if(bgIcon!=null) g.drawImage(bgIcon.getImage(), 0, 0, getWidth(), getHeight(), this);
+                if (spriteIcon != null) {
+                    int x = (int) (getWidth() * 0.457f);
+                    int y = (int) (getHeight() * 0.209f);
+
+                    int width = (int) (getWidth() * 0.463f);
+                    int height = (int) (getHeight() * 0.747f);
+
+                    g.drawImage(spriteIcon.getImage(),
+                            x, y, width, height, this);
+                }
+
+                if(tableIcon!=null) g.drawImage(tableIcon.getImage(),0,  10, getWidth(), getHeight(), this);
+                if(computerIcon!=null) g.drawImage(computerIcon.getImage(),0,  10, getWidth(), getHeight(), this);
+            }
+        };
+
+        spriteEnter.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                cardLayout.show(cardContainer, "SpriteTalks");
                 JRadioButton one = new JRadioButton("Single");
                 JRadioButton two = new JRadioButton("Double");
                 JRadioButton four = new JRadioButton("Quad");
@@ -104,34 +157,6 @@ public class GameRunning extends JFrame{
                 } else {
                     System.out.println("System Closed without selection");
                 }
-            }
-        });
-
-        spriteEnter = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                if(bgIcon!=null) g.drawImage(bgIcon.getImage(), 0, 0, getWidth(), getHeight(), this);
-                if (spriteIcon != null) {
-                    int x = (int) (getWidth() * 0.457f);
-                    int y = (int) (getHeight() * 0.209f);
-
-                    int width = (int) (getWidth() * 0.463f);
-                    int height = (int) (getHeight() * 0.747f);
-
-                    g.drawImage(spriteIcon.getImage(),
-                            x, y, width, height, this);
-                }
-
-                if(tableIcon!=null) g.drawImage(tableIcon.getImage(),0,  10, getWidth(), getHeight(), this);
-                if(computerIcon!=null) g.drawImage(computerIcon.getImage(),0,  10, getWidth(), getHeight(), this);
-            }
-        };
-
-        spriteEnter.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                cardLayout.show(cardContainer, "SpriteTalks");
             }
         });
         spriteTalks = new JPanel(){

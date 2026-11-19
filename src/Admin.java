@@ -8,8 +8,8 @@ public class Admin extends Chiikawas {
     private Record record;
     private final TransactionR transactionRecord;
 
-    public Admin(String name, int age) {
-        super(name, age);
+    public Admin(String name) {
+        super(name);
         this.record = new Record();
         this.transactionRecord = new TransactionR();
     }
