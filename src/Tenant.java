@@ -5,13 +5,17 @@ public class Tenant extends Chiikawas {
     private int monthsLeft;
     private TransactionR transactionRecord;
 
-    public Tenant(String name, int age, Room roomNumber) {
+    public Tenant(String name, Room roomNumber) {
         super(name);
         this.roomNumber = roomNumber;
         this.bill = 0;
         this.numberOfBeds = 1;
         this.monthsLeft = 0;
         this.transactionRecord = new TransactionR();
+    }
+
+    public Tenant(String name) {
+        super(name);
     }
 
     public Tenant(String name, int numberOfBeds, int monthsLeft) {
@@ -130,50 +134,80 @@ public class Tenant extends Chiikawas {
     }
 
     public static class Chiikawa extends Tenant {
-        public Chiikawa(Room roomNumber, int age) {
-            super("Chiikawa", age, roomNumber);
+        public Chiikawa(Room roomNumber) {
+            super("Chiikawa", roomNumber);
+        }
+
+        public Chiikawa() {
+            super("Chiikawa");
         }
     }
 
     public static class Furuhonya extends Tenant {
-        public Furuhonya(Room roomNumber, int age) {
-            super("Furuhonya", age, roomNumber);
+        public Furuhonya(Room roomNumber) {
+            super("Furuhonya", roomNumber);
+        }
+        public Furuhonya() {
+            super("Furuhonya");
         }
     }
 
     public static class Rakko extends Tenant {
-        public Rakko(Room roomNumber, int age) {
-            super("Rakko", age, roomNumber);
+        public Rakko(Room roomNumber) {
+            super("Rakko", roomNumber);
+        }
+
+        public Rakko() {
+            super("Rakko");
         }
     }
 
     public static class Kurimanju extends Tenant {
-        public Kurimanju(Room roomNumber, int age) {
-            super("Kurimanju", age, roomNumber);
+        public Kurimanju(Room roomNumber) {
+            super("Kurimanju", roomNumber);
+        }
+
+        public Kurimanju() {
+            super("Kurimanju");
         }
     }
 
     public static class Shisa extends Tenant {
-        public Shisa(Room roomNumber, int age) {
-            super("Shisa", age, roomNumber);
+        public Shisa(Room roomNumber) {
+            super("Shisa", roomNumber);
+        }
+        public Shisa() {
+            super("Shisa");
         }
     }
 
     public static class Hachiware extends Tenant {
-        public Hachiware(Room roomNumber, int age) {
-            super("Hachiware", age, roomNumber);
+        public Hachiware(Room roomNumber) {
+            super("Hachiware", roomNumber);
+        }
+
+        public Hachiware() {
+            super("Hachiware");
         }
     }
 
     public static class Usagi extends Tenant {
-        public Usagi(Room roomNumber, int age) {
-            super("Usagi", age, roomNumber);
+        public Usagi(Room roomNumber) {
+            super("Usagi", roomNumber);
+        }
+
+        public Usagi() {
+            super("Usagi");
         }
     }
 
     public static class Momonga extends Tenant {
-        public Momonga(Room roomNumber, int age) {
-            super("Momonga", age, roomNumber);
+        public Momonga(Room roomNumber) {
+            super("Momonga", roomNumber);
+        }
+
+        public Momonga(){
+            super("Momonga");
         }
     }
 }
