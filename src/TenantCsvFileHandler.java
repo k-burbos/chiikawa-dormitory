@@ -21,7 +21,7 @@ public class TenantCsvFileHandler {
             if (!Files.exists(TENANTS_FILE)) {
                 Files.write(
                         TENANTS_FILE,
-                        ("name,beds,monthsLeft,bill\n")
+                        "name,beds,monthsLeft,bill\n"
                                 .getBytes(StandardCharsets.UTF_8),
                         StandardOpenOption.CREATE,
                         StandardOpenOption.TRUNCATE_EXISTING
@@ -50,7 +50,7 @@ public class TenantCsvFileHandler {
     }
 
     public static void updateTenant(Tenant updatedTenant) {
-        List<String> tenants = loadTenantRows();
+        List<String> tenantRows = loadTenantRows();
 
         try (BufferedWriter writer = Files.newBufferedWriter(
                 TENANTS_FILE,
@@ -60,9 +60,9 @@ public class TenantCsvFileHandler {
             writer.write("name,beds,monthsLeft,bill");
             writer.newLine();
 
-            boolean updated = false;
+            boolean tenantUpdated = false;
 
-            for (String row : tenants) {
+            for (String row : tenantRows) {
                 String[] values = row.split(",", -1);
 
                 if (values.length > 0
@@ -73,7 +73,7 @@ public class TenantCsvFileHandler {
                                     updatedTenant.getMonthsLeft() + "," +
                                     updatedTenant.getBill()
                     );
-                    updated = true;
+                    tenantUpdated = true;
                 } else {
                     writer.write(row);
                 }
@@ -81,7 +81,7 @@ public class TenantCsvFileHandler {
                 writer.newLine();
             }
 
-            if (!updated) {
+            if (!tenantUpdated) {
                 writer.write(
                         escapeCsv(updatedTenant.getName()) + "," +
                                 updatedTenant.getNumberOfBeds() + "," +
