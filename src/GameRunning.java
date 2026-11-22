@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URL;
@@ -13,6 +15,11 @@ public class GameRunning extends JFrame{
     private JPanel spriteTalks;
     private JPanel optionYesNo;
     private JLabel optnYes;
+    private JLabel optnNo;
+    private JLabel lblTalk;
+    private JPanel noScreen;
+    private JLabel lblNo;
+    private boolean showOption = false;
 
     private ArrayList<Tenant> Chii = new ArrayList<>();
     private ArrayList<Room> Rooms = new ArrayList<>();
@@ -25,11 +32,60 @@ public class GameRunning extends JFrame{
         cardContainer.add(spriteEnter, "SpriteEnter");
         cardContainer.add(spriteTalks, "SpriteTalks");
         cardContainer.add(optionYesNo, "OptionYesNo");
+        cardContainer.add(noScreen, "NoScreen");
         setContentPane(cardContainer);
         populateTenants(); // populate the tenants
         populateRooms();
     }
 
+    private void showTransactionDialog(){
+        JRadioButton one = new JRadioButton("Single");
+        JRadioButton two = new JRadioButton("Double");
+        JRadioButton four = new JRadioButton("Quad");
+        ButtonGroup bedrooms = new ButtonGroup();
+        bedrooms.add(one);
+        bedrooms.add(two);
+        bedrooms.add(four);
+
+        JPanel panel = new JPanel(new GridLayout(0, 1));
+        panel.add(new JLabel("Choose number of bedrooms:"));
+        panel.add(one);
+        panel.add(two);
+        panel.add(four);
+
+        panel.add(new JLabel("How many months?"));
+        panel.add(new JTextField());
+
+        int result = JOptionPane.showConfirmDialog(
+                null,
+                panel,
+                "Transaction",
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE
+        );
+        if(result == JOptionPane.OK_OPTION){
+            System.out.println("User Pressed OK");
+            ButtonModel roomChoice = bedrooms.getSelection();
+            if(roomChoice == one){
+
+            }
+        } else if(result == JOptionPane.CANCEL_OPTION){
+            System.out.println("User Pressed Cancel");
+        } else {
+            System.out.println("System Closed without selection");
+        }
+    }
+
+    private Rectangle scaled(JComponent p, double x, double y, double w, double h){
+        return new Rectangle(
+                (int) (p.getWidth() * x), (int) (p.getHeight() * y), (int)(p.getWidth() * w), (int) (p.getHeight() * h));
+    }
+
+    private void drawImage(Graphics g, ImageIcon icon, JComponent p, double x, double y, double w, double h){
+        if(icon==null) return;
+        Rectangle r = scaled(p, x, y, w, h);
+        g.drawImage(icon.getImage(), r.x, r.y, r.width, r.height, p);
+    }
     void populateTenants() {
         ChiikawaFactory cf = new ChiikawaFactory();
         Chii.add(cf.createChiikawa("Chiikawa"));
@@ -70,8 +126,11 @@ public class GameRunning extends JFrame{
         URL computerUrl = getClass().getResource("/Images/Elements/bsComputer.png");
         ImageIcon computerIcon = (computerUrl != null) ? new ImageIcon(computerUrl) : null;
 
-        URL sprite = getClass().getResource("/Images/ChiikawasSprites/chiikawaAsking_1.png");
-        ImageIcon spriteIcon = (sprite != null) ? new ImageIcon(sprite) : null;
+        URL spriteA = getClass().getResource("/Images/ChiikawasSprites/chiikawaAsking_1.png");
+        ImageIcon askingSprite = (spriteA != null) ? new ImageIcon(spriteA) : null;
+
+        URL spriteS = getClass().getResource("/Images/ChiikawasSprites/chiikawaSad_1.png");
+        ImageIcon sadSprite = (spriteS != null) ? new ImageIcon(spriteS) : null;
 
         URL chatHead = getClass().getResource("/Images/Elements/bsChatHead.png");
         ImageIcon chatHeadIcon = (chatHead != null) ? new ImageIcon(chatHead) : null;
@@ -83,9 +142,9 @@ public class GameRunning extends JFrame{
 
             protected void paintComponent(Graphics g){
                 super.paintComponent(g);
-                if(bgIcon!=null) g.drawImage(bgIcon.getImage(), 0, 0, getWidth(), getHeight(), this);
-                if(tableIcon!=null) g.drawImage(tableIcon.getImage(),0,  10, getWidth(), getHeight(), this);
-                if(computerIcon!=null) g.drawImage(computerIcon.getImage(),0,  10, getWidth(), getHeight(), this);
+                drawImage(g, bgIcon, this, 0, 0, 1, 1);
+                drawImage(g, tableIcon, this, 0, 0, 1, 1);
+                drawImage(g, computerIcon, this, 0, 0, 1, 1);
             }
         };
 
@@ -100,122 +159,111 @@ public class GameRunning extends JFrame{
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                if(bgIcon!=null) g.drawImage(bgIcon.getImage(), 0, 0, getWidth(), getHeight(), this);
-                if (spriteIcon != null) {
-                    int x = (int) (getWidth() * 0.457f);
-                    int y = (int) (getHeight() * 0.209f);
+                drawImage(g, bgIcon, this, 0, 0, 1, 1);
+                drawImage(g, askingSprite, this, 0.457, 0.209, 0.463, 0.747);
+                drawImage(g, tableIcon, this, 0, 0, 1, 1);
+                drawImage(g, computerIcon, this, 0, 0, 1, 1);
 
-                    int width = (int) (getWidth() * 0.463f);
-                    int height = (int) (getHeight() * 0.747f);
-
-                    g.drawImage(spriteIcon.getImage(),
-                            x, y, width, height, this);
-                }
-
-                if(tableIcon!=null) g.drawImage(tableIcon.getImage(),0,  10, getWidth(), getHeight(), this);
-                if(computerIcon!=null) g.drawImage(computerIcon.getImage(),0,  10, getWidth(), getHeight(), this);
             }
         };
-
+//
         spriteEnter.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 cardLayout.show(cardContainer, "SpriteTalks");
-                JRadioButton one = new JRadioButton("Single");
-                JRadioButton two = new JRadioButton("Double");
-                JRadioButton four = new JRadioButton("Quad");
-                ButtonGroup bedrooms = new ButtonGroup();
-                bedrooms.add(one);
-                bedrooms.add(two);
-                bedrooms.add(four);
-
-                JPanel panel = new JPanel(new GridLayout(0, 1));
-                panel.add(new JLabel("Choose number of bedrooms:"));
-                panel.add(one);
-                panel.add(two);
-                panel.add(four);
-
-                panel.add(new JLabel("How many months?"));
-                panel.add(new JTextField());
-
-                int result = JOptionPane.showConfirmDialog(
-                        null,
-                        panel,
-                        "Transaction",
-                        JOptionPane.OK_CANCEL_OPTION,
-                        JOptionPane.PLAIN_MESSAGE
-                );
-                if(result == JOptionPane.OK_OPTION){
-                    System.out.println("User Pressed OK");
-                    ButtonModel roomChoice = bedrooms.getSelection();
-                    if(roomChoice == one){
-
-                    }
-                } else if(result == JOptionPane.CANCEL_OPTION){
-                    System.out.println("User Pressed Cancel");
-                } else {
-                    System.out.println("System Closed without selection");
-                }
             }
         });
+//
+//
         spriteTalks = new JPanel(){
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                if (bgIcon != null) g.drawImage(bgIcon.getImage(), 0, 0, getWidth(), getHeight(), this);
-                if (spriteIcon != null) {
-                    int x = (int) (getWidth() * 0.457f);
-                    int y = (int) (getHeight() * 0.209f);
-
-                    int width = (int) (getWidth() * 0.463f);
-                    int height = (int) (getHeight() * 0.747f);
-
-                    g.drawImage(spriteIcon.getImage(),
-                            x, y, width, height, this);
+                drawImage(g, bgIcon, this, 0, 0, 1, 1);
+                drawImage(g, askingSprite, this, 0.457, 0.209, 0.463, 0.747);
+                drawImage(g, tableIcon, this, 0, 0, 1, 1);
+                drawImage(g, computerIcon, this, 0, 0, 1, 1);
+                drawImage(g, chatHeadIcon, this, 0.136, -0.074, 0.585, 0.644);
+                if (showOption) {
+                    drawImage(g, optionBtnIcon, this, 0.224, 0.787, 0.200, 0.180);
+                    drawImage(g, optionBtnIcon, this, 0.526, 0.787, 0.200, 0.180);
                 }
-
-                if (tableIcon != null) g.drawImage(tableIcon.getImage(), 0, 10, getWidth(), getHeight(), this);
-                if (computerIcon != null) g.drawImage(computerIcon.getImage(), 0, 10, getWidth(), getHeight(), this);
-                if (chatHeadIcon != null) g.drawImage(chatHeadIcon.getImage(), 261, -80, 1124, 696, this);
             }
         };
+
+        spriteTalks.setLayout(null);
+
+        lblTalk = new JLabel("i want one bedroom! uwa");
+        lblTalk.setFont(new Font("/Fonts/BaksoSapi.otf", Font.BOLD, 28));
+        lblTalk.setForeground(Color.BLACK);
+        spriteTalks.add(lblTalk);
+
+        optnYes = new JLabel("YES", SwingConstants.CENTER);
+        optnYes.setFont(new Font("/Fonts/BaksoSapi.otf", Font.BOLD, 24));
+        optnYes.setForeground(Color.WHITE);
+        optnYes.setVisible(false);
+        spriteTalks.add(optnYes);
+
+        optnNo = new JLabel("NO", SwingConstants.CENTER);
+        optnNo.setFont(new Font("/Fonts/BaksoSapi.otf", Font.BOLD, 24));
+        optnNo.setForeground(Color.WHITE);
+        optnNo.setVisible(false);
+        spriteTalks.add(optnNo);
+
+        spriteTalks.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                lblTalk.setBounds(scaled(spriteTalks,0.330, 0.085, 0.417, 0.231));
+                optnYes.setBounds(scaled(optionYesNo, 0.224, 0.787, 0.200, 0.180));
+                optnNo.setBounds(scaled(optionYesNo, 0.526, 0.787, 0.200, 0.180));
+            }
+        });
 
         spriteTalks.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                cardLayout.show(cardContainer, "OptionYesNo");
+                if(!showOption){
+                    showOption = true;
+                    optnNo.setVisible(true);
+                    optnYes.setVisible(true);
+                    spriteTalks.repaint();
+                }
             }
         });
-        optionYesNo = new JPanel(){
+
+        optnNo.addMouseListener(new MouseAdapter() {
             @Override
+            public void mouseClicked(MouseEvent e) {
+                showOption = false;
+                optnNo.setVisible(false);
+                optnYes.setVisible(false);
+                cardLayout.show(cardContainer, "NoScreen");
+            }
+        });
+
+        noScreen = new JPanel(){
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                if (bgIcon != null) g.drawImage(bgIcon.getImage(), 0, 0, getWidth(), getHeight(), this);
-                if (spriteIcon != null) {
-                    int x = (int) (getWidth() * 0.457f);
-                    int y = (int) (getHeight() * 0.209f);
-
-                    int width = (int) (getWidth() * 0.463f);
-                    int height = (int) (getHeight() * 0.747f);
-
-                    g.drawImage(spriteIcon.getImage(),
-                            x, y, width, height, this);
-                }
-
-                if (tableIcon != null) g.drawImage(tableIcon.getImage(), 0, 10, getWidth(), getHeight(), this);
-                if (computerIcon != null) g.drawImage(computerIcon.getImage(), 0, 10, getWidth(), getHeight(), this);
-                if (chatHeadIcon != null) g.drawImage(chatHeadIcon.getImage(), 261, -80, 1124, 696, this);
-                if(optionBtnIcon!=null) g.drawImage(optionBtnIcon.getImage(), 430, 850, 532, 156, this);
-                if(optionBtnIcon!=null) g.drawImage(optionBtnIcon.getImage(), 1010, 850, 532, 156, this);
+                drawImage(g, bgIcon, this, 0, 0, 1, 1);
+                drawImage(g, sadSprite, this, 0.457, 0.209, 0.463, 0.747);
+                drawImage(g, tableIcon, this, 0, 0, 1, 1);
+                drawImage(g, computerIcon, this, 0, 0, 1, 1);
+                drawImage(g, chatHeadIcon, this, 0.136, -0.074, 0.585, 0.644);
             }
         };
-        optionYesNo.setLayout(null);
 
-        optnYes = new JLabel("YES");
-        optnYes.setFont(new Font("/Fonts/BaksoSapi.otf", Font.BOLD, 24));
-        optnYes.setForeground(Color.WHITE);
-        optnYes.setBounds(430, 850, 500, 230);
-        optionYesNo.add(optnYes);
+        noScreen.setLayout(null);
+        lblNo = new JLabel("...uww...");
+        lblNo.setFont(new Font("Arial", Font.BOLD, 24));
+        lblNo.setForeground(Color.BLACK);
+        noScreen.add(lblNo);
+
+        noScreen.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                lblNo.setBounds(scaled(noScreen,0.410, 0.085, 0.417, 0.231));
+            }
+        });
 
     }
 }
