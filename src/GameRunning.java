@@ -6,6 +6,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.util.ArrayList;
+import java.io.InputStream; // need it for custom font
+import java.util.Random; // makes each request for a room different
 
 public class GameRunning extends JFrame{
     private CardLayout cardLayout;
@@ -29,6 +31,19 @@ public class GameRunning extends JFrame{
     private JLabel lblRent;
     private JPanel dayOverScreen;
     private boolean showOption = false;
+    // This is the glide up function, so the kawas smoothly go up instead of suddenly appearing - BURBOS
+    private static final double SPRITE_START_Y = 1.0; // starts off below screen
+    private static final double SPRITE_END_Y = 0.209; // where they end up
+    private static final int GLIDE_MS = 700; // how fast the kawas r going up
+    private double spriteYFrac = SPRITE_END_Y;
+    private boolean gliding = false;
+    private long glideStart;
+    private Timer glideTimer;
+    // glide down function for when they leave
+    private double leaveYFrac = SPRITE_END_Y;
+    private boolean leaving = false; // a flag so i know when to toggle off the speech bubble and stop clicking
+    private Timer leaveTimer;
+    private Font bakso;
 
     private ArrayList<Tenant> Chii = new ArrayList<>();
     private ArrayList<Room> Rooms = new ArrayList<>();
@@ -102,6 +117,51 @@ public class GameRunning extends JFrame{
         Rectangle r = scaled(p, x, y, w, h);
         g.drawImage(icon.getImage(), r.x, r.y, r.width, r.height, p);
     }
+
+    private void startSpriteGlide() { // this changes the y of the sprite every 16ms
+        if(glideTimer != null) glideTimer.stop(); // in case players keeps clicking so timer will not start twice
+        spriteYFrac = SPRITE_START_Y;
+        gliding = true;
+        glideStart = System.currentTimeMillis();
+
+        glideTimer = new Timer(16, e -> { // every 16ms, runs this code
+            double t = (System.currentTimeMillis() - glideStart) / (double) GLIDE_MS;
+            if(t >= 1) { // keeps it from overshooting and stops the timer
+                t = 1;
+                gliding = false;
+                glideTimer.stop();
+            }
+            double eased = 1 - Math.pow(1 - t, 3);
+            spriteYFrac = SPRITE_START_Y + (SPRITE_END_Y - SPRITE_START_Y) * eased;
+            spriteEnter.repaint(); // makes it so that the sprite reappears, otherwise, visually, nothing happens
+        });
+        glideTimer.start();
+    }
+
+    private void startSpriteLeave(JPanel screen, JLabel label, String nextCard) {
+        if(leaving) return; // if its already leaving, ignore any clicks
+        leaving = true;
+        label.setVisible(false); // Rich's thank you text disappears
+        long start = System.currentTimeMillis();
+
+        leaveTimer = new Timer(16, e -> {
+            double t = (System.currentTimeMillis() - start) / (double) GLIDE_MS;
+            if (t > 1) t = 1;
+            double eased = t * t * t; // basically the transition, just makes it speed up
+            leaveYFrac = SPRITE_END_Y + (SPRITE_START_Y - SPRITE_END_Y) * eased;
+            screen.repaint();
+
+            if(t>=1) {
+                leaveTimer.stop();
+                leaving = false;
+                leaveYFrac = SPRITE_END_Y;
+                label.setVisible(true);
+                cardLayout.show(cardContainer, nextCard);
+            }
+        });
+        leaveTimer.start();
+    }
+
     void populateTenants() {
         ChiikawaFactory cf = new ChiikawaFactory();
         Chii.add(cf.createChiikawa("Chiikawa"));
@@ -112,6 +172,19 @@ public class GameRunning extends JFrame{
         Chii.add(cf.createChiikawa("Kurimanju"));
         Chii.add(cf.createChiikawa("Shisa"));
         Chii.add(cf.createChiikawa("Furuhonya"));
+    }
+
+    private Font loadBakso() { // allows me to use the new font, used this in startScreen too
+        try (InputStream is = getClass().getResourceAsStream("/Fonts/BaksoSapi.otf")) {
+            if(is == null) throw new Exception("Font file not found");
+            Font f = Font.createFont(Font.TRUETYPE_FONT, is);
+            GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(f);
+            return f;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Font("Arial",Font.BOLD, 24);
+        }
+
     }
 
     void populateRooms() {
@@ -130,7 +203,17 @@ public class GameRunning extends JFrame{
         a.setTitle("Chiikawa Dormitory");
     }
 
+    private Rectangle bubbleBounds(JComponent p) { // making this so that there's a box around the speech bubble, text won't go anywhere but there
+        return scaled(p, 0.335, 0.10, 0.215, 0.20);
+    }
+
+    private String bubbleText(String s) {
+        return "<html><center>" + s + "</center></html>"; // wraps the text so the text won't cut off
+    }
+
     private void createUIComponents() {
+        // font
+        bakso = loadBakso();
         // background
         URL bg = getClass().getResource("/Images/Backgrounds/bgBaseScreen.png");
         ImageIcon bgIcon = (bg != null) ? new ImageIcon(bg) : null;
@@ -174,6 +257,7 @@ public class GameRunning extends JFrame{
             @Override
             public void mouseClicked(MouseEvent e) {
                 cardLayout.show(cardContainer, "SpriteEnter");
+                startSpriteGlide();
             }
         });
 
@@ -182,7 +266,7 @@ public class GameRunning extends JFrame{
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 drawImage(g, bgIcon, this, 0, 0, 1, 1);
-                drawImage(g, askingSprite, this, 0.457, 0.209, 0.463, 0.747);
+                drawImage(g, askingSprite, this, 0.457, spriteYFrac, 0.463, 0.747);
                 drawImage(g, tableIcon, this, 0, 0, 1, 1);
                 drawImage(g, computerIcon, this, 0, 0, 1, 1);
 
@@ -192,6 +276,7 @@ public class GameRunning extends JFrame{
         spriteEnter.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                if(gliding) return;
                 cardLayout.show(cardContainer, "SpriteTalks");
             }
         });
@@ -215,19 +300,21 @@ public class GameRunning extends JFrame{
 
         spriteTalks.setLayout(null);
 
-        lblTalk = new JLabel("I'll live w momonga");
-        lblTalk.setFont(new Font("/Fonts/BaksoSapi.otf", Font.BOLD, 28));
+        lblTalk = new JLabel(bubbleText("Uuww... I'd like to live with Momonga!"));
+        lblTalk.setHorizontalAlignment(SwingConstants.CENTER);
+        lblTalk.setVerticalAlignment(SwingConstants.CENTER);
+        lblTalk.setFont(bakso.deriveFont(Font.PLAIN, 28f));
         lblTalk.setForeground(Color.BLACK);
         spriteTalks.add(lblTalk);
 
         optnYes = new JLabel("YES", SwingConstants.CENTER);
-        optnYes.setFont(new Font("/Fonts/BaksoSapi.otf", Font.BOLD, 24));
+        optnYes.setFont(bakso.deriveFont(Font.PLAIN, 24f));
         optnYes.setForeground(Color.WHITE);
         optnYes.setVisible(false);
         spriteTalks.add(optnYes);
 
         optnNo = new JLabel("NO", SwingConstants.CENTER);
-        optnNo.setFont(new Font("/Fonts/BaksoSapi.otf", Font.BOLD, 24));
+        optnNo.setFont(bakso.deriveFont(Font.PLAIN, 24f));
         optnNo.setForeground(Color.WHITE);
         optnNo.setVisible(false);
         spriteTalks.add(optnNo);
@@ -235,7 +322,7 @@ public class GameRunning extends JFrame{
         spriteTalks.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                lblTalk.setBounds(scaled(spriteTalks,0.360, 0.085, 0.417, 0.231));
+                lblTalk.setBounds(bubbleBounds(spriteTalks));
                 optnYes.setBounds(scaled(optionYesNo, 0.224, 0.787, 0.200, 0.180));
                 optnNo.setBounds(scaled(optionYesNo, 0.526, 0.787, 0.200, 0.180));
             }
@@ -268,26 +355,34 @@ public class GameRunning extends JFrame{
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 drawImage(g, bgIcon, this, 0, 0, 1, 1);
-                drawImage(g, sadSprite, this, 0.457, 0.209, 0.463, 0.747);
+                drawImage(g, sadSprite, this, 0.457, leaveYFrac, 0.463, 0.747);
                 drawImage(g, tableIcon, this, 0, 0, 1, 1);
                 drawImage(g, computerIcon, this, 0, 0, 1, 1);
-                drawImage(g, chatHeadIcon, this, 0.136, -0.074, 0.585, 0.644);
+                if(!leaving) drawImage(g, chatHeadIcon, this, 0.136, -0.074, 0.585, 0.644);
             }
         };
 
         noScreen.setLayout(null);
-        lblNo = new JLabel("...uww...");
-        lblNo.setFont(new Font("Arial", Font.BOLD, 24));
+        lblNo = new JLabel(bubbleText("...uww..."));
+        lblNo.setHorizontalAlignment(SwingConstants.CENTER);
+        lblNo.setVerticalAlignment(SwingConstants.CENTER);
+        lblNo.setFont(bakso.deriveFont(Font.PLAIN, 24f));
         lblNo.setForeground(Color.BLACK);
         noScreen.add(lblNo);
 
         noScreen.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                lblNo.setBounds(scaled(noScreen,0.410, 0.085, 0.417, 0.231));
+                lblNo.setBounds(bubbleBounds(noScreen));
             }
         });
 
+        noScreen.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            startSpriteLeave(noScreen, lblNo, "BaseScreen");
+        }
+        });
         //yes screen
 
         optnYes.addMouseListener(new MouseAdapter() {
@@ -312,15 +407,17 @@ public class GameRunning extends JFrame{
         };
 
         yesScreen.setLayout(null);
-        lblYes = new JLabel("yay uwa!");
-        lblYes.setFont(new Font("Arial", Font.BOLD, 24));
+        lblYes = new JLabel(bubbleText("yay uwa!"));
+        lblYes.setHorizontalAlignment(SwingConstants.CENTER);
+        lblYes.setVerticalAlignment(SwingConstants.CENTER);
+        lblYes.setFont(bakso.deriveFont(Font.PLAIN, 24f));
         lblYes.setForeground(Color.BLACK);
         yesScreen.add(lblYes);
 
         yesScreen.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                lblYes.setBounds(scaled(yesScreen,0.410, 0.085, 0.417, 0.231));
+                lblYes.setBounds(bubbleBounds(yesScreen));
             }
         });
 
@@ -345,22 +442,24 @@ public class GameRunning extends JFrame{
         };
 
         transactionScreen.setLayout(null);
-        lblTransaction = new JLabel("i want two bedrooms for 2 months! uwa");
-        lblTransaction.setFont(new Font("Arial", Font.BOLD, 20));
+        lblTransaction = new JLabel(bubbleText("i want two bedrooms for 2 months! uwa"));
+        lblTransaction.setHorizontalAlignment(SwingConstants.CENTER);
+        lblTransaction.setVerticalAlignment(SwingConstants.CENTER);
+        lblTransaction.setFont(bakso.deriveFont(Font.PLAIN, 20f));
         lblTransaction.setForeground(Color.BLACK);
         transactionScreen.add(lblTransaction);
 
         transactionScreen.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                lblTransaction.setBounds(scaled(transactionScreen,0.315, 0.085, 0.417, 0.231));
+                lblTransaction.setBounds(bubbleBounds(transactionScreen));
             }
         });
 
         transactionScreen.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-               showTransactionDialog();
+              showTransactionDialog();
             }
         });
 
@@ -368,30 +467,32 @@ public class GameRunning extends JFrame{
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 drawImage(g, bgIcon, this, 0, 0, 1, 1);
-                drawImage(g, happySprite, this, 0.457, 0.209, 0.463, 0.747);
+                drawImage(g, happySprite, this, 0.457, leaveYFrac, 0.463, 0.747);
                 drawImage(g, tableIcon, this, 0, 0, 1, 1);
                 drawImage(g, computerIcon, this, 0, 0, 1, 1);
-                drawImage(g, chatHeadIcon, this, 0.136, -0.074, 0.585, 0.644);
+                if (!leaving) drawImage(g, chatHeadIcon, this, 0.136, -0.074, 0.585, 0.644);
             }
         };
 
         thankScreen.setLayout(null);
-        lblThank = new JLabel("Thank you!");
-        lblThank.setFont(new Font("Arial", Font.BOLD, 24));
+        lblThank = new JLabel(bubbleText("Thank you!"));
+        lblThank.setHorizontalAlignment(SwingConstants.CENTER);
+        lblThank.setVerticalAlignment(SwingConstants.CENTER);
+        lblThank.setFont(bakso.deriveFont(Font.PLAIN, 24f));
         lblThank.setForeground(Color.BLACK);
         thankScreen.add(lblThank);
 
         thankScreen.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                lblThank.setBounds(scaled(thankScreen,0.400, 0.085, 0.417, 0.231));
+                lblThank.setBounds(bubbleBounds(thankScreen));
             }
         });
 
         thankScreen.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                cardLayout.show(cardContainer, "RentScreen");
+                startSpriteLeave(thankScreen, lblThank, "RentScreen");
             }
         });
 
