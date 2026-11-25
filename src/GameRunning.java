@@ -157,7 +157,7 @@ public class GameRunning extends JFrame{
         URL optionBtn = getClass().getResource("/Images/Elements/bsButton.png");
         ImageIcon optionBtnIcon = (optionBtn != null) ? new ImageIcon(optionBtn) : null;
 
-        URL Xbtn = getClass().getResource("/Images/Elements/X.png");
+        URL Xbtn = getClass().getResource("/Images/X.png");
         ImageIcon XbtnIcon = (Xbtn != null) ? new ImageIcon(Xbtn) : null;
 
         baseScreen = new JPanel(){
@@ -167,6 +167,7 @@ public class GameRunning extends JFrame{
                 drawImage(g, bgIcon, this, 0, 0, 1, 1);
                 drawImage(g, tableIcon, this, 0, 0, 1, 1);
                 drawImage(g, computerIcon, this, 0, 0, 1, 1);
+                drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
             }
         };
 
@@ -185,6 +186,7 @@ public class GameRunning extends JFrame{
                 drawImage(g, askingSprite, this, 0.457, 0.209, 0.463, 0.747);
                 drawImage(g, tableIcon, this, 0, 0, 1, 1);
                 drawImage(g, computerIcon, this, 0, 0, 1, 1);
+                drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
 
             }
         };
@@ -210,6 +212,7 @@ public class GameRunning extends JFrame{
                     drawImage(g, optionBtnIcon, this, 0.224, 0.787, 0.200, 0.180);
                     drawImage(g, optionBtnIcon, this, 0.526, 0.787, 0.200, 0.180);
                 }
+                drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
             }
         };
 
@@ -272,6 +275,7 @@ public class GameRunning extends JFrame{
                 drawImage(g, tableIcon, this, 0, 0, 1, 1);
                 drawImage(g, computerIcon, this, 0, 0, 1, 1);
                 drawImage(g, chatHeadIcon, this, 0.136, -0.074, 0.585, 0.644);
+                drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
             }
         };
 
@@ -308,6 +312,7 @@ public class GameRunning extends JFrame{
                 drawImage(g, tableIcon, this, 0, 0, 1, 1);
                 drawImage(g, computerIcon, this, 0, 0, 1, 1);
                 drawImage(g, chatHeadIcon, this, 0.136, -0.074, 0.585, 0.644);
+                drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
             }
         };
 
@@ -341,6 +346,7 @@ public class GameRunning extends JFrame{
                 drawImage(g, tableIcon, this, 0, 0, 1, 1);
                 drawImage(g, computerIcon, this, 0, 0, 1, 1);
                 drawImage(g, chatHeadIcon, this, 0.136, -0.074, 0.585, 0.644);
+                drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
             }
         };
 
@@ -372,6 +378,7 @@ public class GameRunning extends JFrame{
                 drawImage(g, tableIcon, this, 0, 0, 1, 1);
                 drawImage(g, computerIcon, this, 0, 0, 1, 1);
                 drawImage(g, chatHeadIcon, this, 0.136, -0.074, 0.585, 0.644);
+                drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
             }
         };
 
@@ -401,6 +408,7 @@ public class GameRunning extends JFrame{
                 drawImage(g, bgIcon, this, 0, 0, 1, 1);
                 drawImage(g, tableIcon, this, 0, 0, 1, 1);
                 drawImage(g, computerIcon, this, 0, 0, 1, 1);
+                drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
             }
         };
 
@@ -430,6 +438,7 @@ public class GameRunning extends JFrame{
                 drawImage(g, bgIcon, this, 0, 0, 1, 1);
                 drawImage(g, tableIcon, this, 0, 0, 1, 1);
                 drawImage(g, computerIcon, this, 0, 0, 1, 1);
+                drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
             }
         };
 
