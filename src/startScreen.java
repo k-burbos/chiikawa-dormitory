@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.InputStream;
 import java.net.URL;
 
@@ -17,15 +19,27 @@ public class startScreen extends JFrame {
             dispose();
             GameManager.start();
         });
+        exitButton.addActionListener(e -> {
+            dispose();
+        });
+        creditButton.addActionListener(e -> {
+            dispose();
+            CreditScreen.start();
+        });
+        setContentPane(panel1);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setVisible(true);
+        setSize(1920, 1080);
+        setTitle("Chiikawa Dormitory");
     }
 
     public static void main(String[] args) {
         startScreen a = new startScreen();
-        a.setContentPane(a.panel1);
-        a.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        a.setVisible(true);
-        a.setSize(1920, 1080);
-        a.setTitle("Chiikawa Dormitory");
+//        a.setContentPane(a.panel1);
+//        a.setDefaultCloseOperation(EXIT_ON_CLOSE);
+//        a.setVisible(true);
+//        a.setSize(1920, 1080);
+//        a.setTitle("Chiikawa Dormitory");
     }
 
     private Font loadFont(String path, float size) { // alows using of custom fonts
@@ -63,5 +77,8 @@ public class startScreen extends JFrame {
                 g2.dispose();
             }
         };
+    }
+    public static void start(){
+        new startScreen();
     }
 }
