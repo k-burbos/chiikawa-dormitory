@@ -256,6 +256,29 @@ public class GameRunning5 extends JFrame{
         return "<html><center>" + s + "</center></html>"; // wraps the text so the text won't cut off
     }
 
+    private Rectangle xBtnBounds(JPanel p){
+        return new Rectangle(
+                (int) (p.getWidth()  * 0.95),
+                (int) (p.getHeight() * 0.02),
+                (int) (p.getWidth()  * 0.03),
+                (int) (p.getHeight() * 0.05));
+    }
+
+    private void addXClick(JPanel panel, Runnable action){
+        panel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(xBtnBounds(panel).contains(e.getPoint())){
+                    action.run();
+                }
+            }
+        });
+    }
+
+    private boolean onX(JPanel p, MouseEvent e){
+        return xBtnBounds(p).contains(e.getPoint());
+    }
+
     private void createUIComponents() {
         // font
         bakso = loadBakso();
@@ -285,7 +308,7 @@ public class GameRunning5 extends JFrame{
         URL optionBtn = getClass().getResource("/Images/Elements/bsButton.png");
         ImageIcon optionBtnIcon = (optionBtn != null) ? new ImageIcon(optionBtn) : null;
 
-        URL Xbtn = getClass().getResource("/Images/Elements/X.png");
+        URL Xbtn = getClass().getResource("/Images/X.png");
         ImageIcon XbtnIcon = (Xbtn != null) ? new ImageIcon(Xbtn) : null;
 
         baseScreen = new JPanel(){
@@ -295,6 +318,7 @@ public class GameRunning5 extends JFrame{
                 drawImage(g, bgIcon, this, 0, 0, 1, 1);
                 drawImage(g, tableIcon, this, 0, 0, 1, 1);
                 drawImage(g, computerIcon, this, 0, 0, 1, 1);
+                drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
             }
         };
 
@@ -316,6 +340,7 @@ public class GameRunning5 extends JFrame{
                 drawImage(g, askingSprite, this, 0.457, spriteYFrac, 0.463, 0.747);
                 drawImage(g, tableIcon, this, 0, 0, 1, 1);
                 drawImage(g, computerIcon, this, 0, 0, 1, 1);
+                drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
 
             }
         };
@@ -342,6 +367,7 @@ public class GameRunning5 extends JFrame{
                     drawImage(g, optionBtnIcon, this, 0.224, 0.787, 0.200, 0.180);
                     drawImage(g, optionBtnIcon, this, 0.526, 0.787, 0.200, 0.180);
                 }
+                drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
             }
         };
 
@@ -406,6 +432,7 @@ public class GameRunning5 extends JFrame{
                 drawImage(g, tableIcon, this, 0, 0, 1, 1);
                 drawImage(g, computerIcon, this, 0, 0, 1, 1);
                 if(!leaving) drawImage(g, chatHeadIcon, this, 0.136, -0.074, 0.585, 0.644);
+                drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
             }
         };
 
@@ -450,6 +477,7 @@ public class GameRunning5 extends JFrame{
                 drawImage(g, tableIcon, this, 0, 0, 1, 1);
                 drawImage(g, computerIcon, this, 0, 0, 1, 1);
                 drawImage(g, chatHeadIcon, this, 0.136, -0.074, 0.585, 0.644);
+                drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
             }
         };
 
@@ -485,6 +513,7 @@ public class GameRunning5 extends JFrame{
                 drawImage(g, tableIcon, this, 0, 0, 1, 1);
                 drawImage(g, computerIcon, this, 0, 0, 1, 1);
                 drawImage(g, chatHeadIcon, this, 0.136, -0.074, 0.585, 0.644);
+                drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
             }
         };
 
@@ -518,6 +547,7 @@ public class GameRunning5 extends JFrame{
                 drawImage(g, tableIcon, this, 0, 0, 1, 1);
                 drawImage(g, computerIcon, this, 0, 0, 1, 1);
                 if (!leaving) drawImage(g, chatHeadIcon, this, 0.136, -0.074, 0.585, 0.644);
+                drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
             }
         };
 
@@ -549,6 +579,7 @@ public class GameRunning5 extends JFrame{
                 drawImage(g, bgIcon, this, 0, 0, 1, 1);
                 drawImage(g, tableIcon, this, 0, 0, 1, 1);
                 drawImage(g, computerIcon, this, 0, 0, 1, 1);
+                drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
             }
         };
 
@@ -579,10 +610,22 @@ public class GameRunning5 extends JFrame{
                 drawImage(g, bgIcon, this, 0, 0, 1, 1);
                 drawImage(g, tableIcon, this, 0, 0, 1, 1);
                 drawImage(g, computerIcon, this, 0, 0, 1, 1);
+                drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
             }
         };
 
+        JPanel[] screens = {baseScreen, spriteEnter, spriteTalks, noScreen,
+                yesScreen, transactionScreen, thankScreen, rentScreen, dayOverScreen};
 
+        for(JPanel s:screens){
+            addXClick(s, ()-> {
+                for (java.awt.event.WindowListener wl : getWindowListeners()) {
+                    removeWindowListener(wl);   // stops GameManager from opening the next screen
+                }
+                new startScreen().setVisible(true);
+                dispose();
+            });
+        }
 
     }
 }

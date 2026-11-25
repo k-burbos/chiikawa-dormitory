@@ -62,9 +62,13 @@ public class GameRunning extends JFrame{
     private ArrayList<Tenant> Chii;
     private ArrayList<Room> Rooms;
 
+
+
     public GameRunning(ArrayList<Tenant> tenants, ArrayList<Room> rooms){
+        new Exception("GameRunning created").printStackTrace();
         this.Chii = tenants;
         this.Rooms = rooms;
+
 
         cardLayout = new CardLayout();
         cardContainer = new JPanel(cardLayout);
@@ -258,6 +262,29 @@ public class GameRunning extends JFrame{
         return "<html><center>" + s + "</center></html>"; // wraps the text so the text won't cut off
     }
 
+    private Rectangle xBtnBounds(JPanel p){
+        return new Rectangle(
+                (int) (p.getWidth()  * 0.95),
+                (int) (p.getHeight() * 0.02),
+                (int) (p.getWidth()  * 0.03),
+                (int) (p.getHeight() * 0.05));
+    }
+
+    private void addXClick(JPanel panel, Runnable action){
+        panel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(xBtnBounds(panel).contains(e.getPoint())){
+                    action.run();
+                }
+            }
+        });
+    }
+
+    private boolean onX(JPanel p, MouseEvent e){
+        return xBtnBounds(p).contains(e.getPoint());
+    }
+
     private void createUIComponents() {
         // font
         bakso = loadBakso();
@@ -304,6 +331,7 @@ public class GameRunning extends JFrame{
         baseScreen.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                if(onX(baseScreen, e)) return;
                 if(ending) return; // fixed the bug of chiikawa gliding up if you say no
                 pickRandomRequest();
                 cardLayout.show(cardContainer, "SpriteEnter");
@@ -410,12 +438,11 @@ public class GameRunning extends JFrame{
                 drawImage(g, sadSprite, this, 0.457, leaveYFrac, 0.463, 0.747);
                 drawImage(g, tableIcon, this, 0, 0, 1, 1);
                 drawImage(g, computerIcon, this, 0, 0, 1, 1);
-<<<<<<< HEAD
+
                 drawImage(g, chatHeadIcon, this, 0.136, -0.074, 0.585, 0.644);
                 drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
-=======
                 if(!leaving) drawImage(g, chatHeadIcon, this, 0.136, -0.074, 0.585, 0.644);
->>>>>>> d4bd93457fe2418b3f8a3a66aa163d52b4a100e1
+
             }
         };
 
@@ -529,12 +556,10 @@ public class GameRunning extends JFrame{
                 drawImage(g, happySprite, this, 0.457, leaveYFrac, 0.463, 0.747);
                 drawImage(g, tableIcon, this, 0, 0, 1, 1);
                 drawImage(g, computerIcon, this, 0, 0, 1, 1);
-<<<<<<< HEAD
                 drawImage(g, chatHeadIcon, this, 0.136, -0.074, 0.585, 0.644);
                 drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
-=======
+
                 if (!leaving) drawImage(g, chatHeadIcon, this, 0.136, -0.074, 0.585, 0.644);
->>>>>>> d4bd93457fe2418b3f8a3a66aa163d52b4a100e1
             }
         };
 
@@ -601,7 +626,17 @@ public class GameRunning extends JFrame{
             }
         };
 
+        JPanel[] screens = {baseScreen, spriteEnter, spriteTalks, noScreen,
+                yesScreen, transactionScreen, thankScreen, rentScreen, dayOverScreen};
 
-
+        for(JPanel s:screens){
+            addXClick(s, ()-> {
+                for (java.awt.event.WindowListener wl : getWindowListeners()) {
+                    removeWindowListener(wl);   // stops GameManager from opening the next screen
+                }
+                new startScreen().setVisible(true);
+                dispose();
+            });
+        }
     }
 }
