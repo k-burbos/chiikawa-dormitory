@@ -15,7 +15,7 @@ public class startScreen extends JFrame {
         title.setForeground(Color.BLACK);
         playButton.addActionListener(e -> {
             dispose();
-            GameRunning.main(new String[]{});
+            GameManager.start();
         });
     }
 

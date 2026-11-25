@@ -35,6 +35,16 @@ public class GameRunning extends JFrame{
     private static final double SPRITE_START_Y = 1.0; // starts off below screen
     private static final double SPRITE_END_Y = 0.209; // where they end up
     private static final int GLIDE_MS = 700; // how fast the kawas r going up
+    private static final int POPUP_DELAY_MS = 2000;
+
+    // Rates for the Dorms
+    private static final int SINGLE_BASE = 40;
+    private static final int SINGLE_MONTHLY = 70;
+    private static final int DOUBLE_BASE = 50;
+    private static final int DOUBLE_MONTHLY = 80;
+    private static final int QUAD_BASE = 80;
+    private static final int QUAD_MONTHLY = 120;
+
     private double spriteYFrac = SPRITE_END_Y;
     private boolean gliding = false;
     private long glideStart;
@@ -44,11 +54,18 @@ public class GameRunning extends JFrame{
     private boolean leaving = false; // a flag so i know when to toggle off the speech bubble and stop clicking
     private Timer leaveTimer;
     private Font bakso;
+    private boolean ending = false; // needs this flag cuz there was a bug where if chiikawa left after no option, they still come back for a second before gamescreen ends
+    private final Random random = new Random(); // randomise the request
+    private String requestedRoom;
+    private int requestedMonths;
 
-    private ArrayList<Tenant> Chii = new ArrayList<>();
-    private ArrayList<Room> Rooms = new ArrayList<>();
+    private ArrayList<Tenant> Chii;
+    private ArrayList<Room> Rooms;
 
-    public GameRunning(){
+    public GameRunning(ArrayList<Tenant> tenants, ArrayList<Room> rooms){
+        this.Chii = tenants;
+        this.Rooms = rooms;
+
         cardLayout = new CardLayout();
         cardContainer = new JPanel(cardLayout);
         createUIComponents();
@@ -63,8 +80,11 @@ public class GameRunning extends JFrame{
         cardContainer.add(rentScreen, "RentScreen");
         cardContainer.add(dayOverScreen, "DayOverScreen");
         setContentPane(cardContainer);
-        populateTenants(); // populate the tenants
-        populateRooms();
+
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setSize(1920, 1080);
+        setResizable(false);
+        setTitle("Chiikawa Dormitory");
     }
 
     private void showTransactionDialog(){
@@ -151,27 +171,70 @@ public class GameRunning extends JFrame{
             leaveYFrac = SPRITE_END_Y + (SPRITE_START_Y - SPRITE_END_Y) * eased;
             screen.repaint();
 
-            if(t>=1) {
+            if (t >= 1) {
                 leaveTimer.stop();
                 leaving = false;
                 leaveYFrac = SPRITE_END_Y;
                 label.setVisible(true);
-                cardLayout.show(cardContainer, nextCard);
+                cardLayout.show(cardContainer, nextCard); // had to change this one kasi they leave at no and after thank you
+
+                ending = true;
+                Timer popupTimer = new Timer(POPUP_DELAY_MS,ev -> {
+                    lblRent.setVisible(false);
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "You have no tenants due to leave.",
+                            "Record of Tenants",
+                            JOptionPane.PLAIN_MESSAGE
+                    );
+                    dispose();
+                });
+                popupTimer.setRepeats(false);
+                popupTimer.start();
             }
         });
         leaveTimer.start();
     }
 
-    void populateTenants() {
-        ChiikawaFactory cf = new ChiikawaFactory();
-        Chii.add(cf.createChiikawa("Chiikawa"));
-        Chii.add(cf.createChiikawa("Hachiware"));
-        Chii.add(cf.createChiikawa("Usagi"));
-        Chii.add(cf.createChiikawa("Momonga"));
-        Chii.add(cf.createChiikawa("Rakko"));
-        Chii.add(cf.createChiikawa("Kurimanju"));
-        Chii.add(cf.createChiikawa("Shisa"));
-        Chii.add(cf.createChiikawa("Furuhonya"));
+    private int getTotalRent(){
+        switch(requestedRoom) {
+            case "Single":
+                return SINGLE_BASE + SINGLE_MONTHLY * requestedMonths;
+            case "Double":
+                return DOUBLE_BASE + DOUBLE_MONTHLY * requestedMonths;
+            default:
+                return QUAD_BASE + QUAD_MONTHLY * requestedMonths;
+        }
+    }
+
+    private void pickRandomRequest() {
+        requestedMonths = random.nextInt(6) + 1; // basically one month or six
+        String monthText = (requestedMonths == 1) ? "1 month" : requestedMonths + " months";
+
+        String talk; // before they pick yes
+        String transaction; // what they say after you pick yes
+
+        switch(random.nextInt(3)) { // randomizing room request
+            case 0:
+                requestedRoom = "Single";
+                talk = "Uuww... I'd like a room all to myself!";
+                transaction = "I want one bedroom for " + monthText + "! Uwa!";
+                break;
+            case 1:
+                requestedRoom = "Double";
+                talk = "Uw.. I'd like to live with my bestfriend, Hachiware!";
+                transaction = "I want two bedrooms for " + monthText + "! Uwa!";
+                break;
+            default:
+                requestedRoom = "Quad";
+                talk = "I want to live with three of my friends, Usagi, Rakko and Hachiware!";
+                transaction = "I want four bedrooms for " + monthText + "! Uwa!";
+                break;
+        }
+
+        lblTalk.setText(bubbleText(talk));
+        lblTransaction.setText(bubbleText(transaction));
+        lblRent.setText("Chiikawa has paid PHP " + getTotalRent() + " for rent.");
     }
 
     private Font loadBakso() { // allows me to use the new font, used this in startScreen too
@@ -185,22 +248,6 @@ public class GameRunning extends JFrame{
             return new Font("Arial",Font.BOLD, 24);
         }
 
-    }
-
-    void populateRooms() {
-        Rooms.add(new Room.singleRoom());
-        Rooms.add(new Room.doubleRoom());
-        Rooms.add(new Room.quadRoom());
-    }
-
-    public static void main(String[] args) {
-        GameRunning a = new GameRunning();
-//        a.setContentPane(a.cardContainer);
-        a.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        a.setVisible(true);
-        a.setSize(1920, 1080);
-        a.setResizable(false);
-        a.setTitle("Chiikawa Dormitory");
     }
 
     private Rectangle bubbleBounds(JComponent p) { // making this so that there's a box around the speech bubble, text won't go anywhere but there
@@ -256,6 +303,8 @@ public class GameRunning extends JFrame{
         baseScreen.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                if(ending) return; // fixed the bug of chiikawa gliding up if you say no
+                pickRandomRequest();
                 cardLayout.show(cardContainer, "SpriteEnter");
                 startSpriteGlide();
             }
@@ -507,7 +556,7 @@ public class GameRunning extends JFrame{
 
         rentScreen.setLayout(null);
         lblRent = new JLabel("Chiikawa has paid [totalfee] for rent."); // temporary
-        lblRent.setFont(new Font("Arial", Font.BOLD, 24));
+        lblRent.setFont(bakso.deriveFont(Font.PLAIN, 24f));
         lblRent.setForeground(Color.BLACK);
         rentScreen.add(lblRent);
 
@@ -521,6 +570,7 @@ public class GameRunning extends JFrame{
         rentScreen.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                if(ending)return; // fixes chiikawa bug too
                 cardLayout.show(cardContainer, "DayOverScreen");
             }
         });
