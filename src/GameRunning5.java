@@ -262,28 +262,40 @@ public class GameRunning5 extends JFrame{
         }
     }
 
+    int chooseRandomPayment() {
+        switch (random.nextInt(2)){
+            case 0 : return 0;
+            default: return 1;
+        }
+    }
     private void pickRandomRequest() {
         requestedMonths = random.nextInt(6) + 1; // basically one month or six
         String monthText = (requestedMonths == 1) ? "1 month" : requestedMonths + " months";
-
+        int randomPaymentOption = chooseRandomPayment();
         String talk; // before they pick yes
         String transaction; // what they say after you pick yes
+        String paymentChosen;
+        if(randomPaymentOption == 0) {
+            paymentChosen = " Thank you. I will pay cash.";
+        } else {
+            paymentChosen = " A pleasure. I'll pay online.";
+        }
 
         switch(random.nextInt(3)) { // randomizing room request
             case 0:
                 requestedRoom = "Single";
                 talk = "Greetings, I'd like one bedroom for myself.";
-                transaction = "I want one bedroom for " + monthText + "!";
+                transaction = "I want one bedroom for " + monthText + "!" + paymentChosen;
                 break;
             case 1:
                 requestedRoom = "Double";
                 talk = "Greetings, I would like two bedrooms for me and Hachiware.";
-                transaction = "I want two bedrooms for " + monthText + "!";
+                transaction = "I want two bedrooms for " + monthText + "!" + paymentChosen;
                 break;
             default:
                 requestedRoom = "Quad";
                 talk = "Greetings, I'd like four bedrooms for Usagi, Chiikawa, Hachiware, and me.";
-                transaction = "I want four bedrooms for " + monthText + "!";
+                transaction = "I want four bedrooms for " + monthText + "!" + paymentChosen;
                 break;
         }
 

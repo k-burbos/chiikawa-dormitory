@@ -261,13 +261,25 @@ public class GameRunning3 extends JFrame{
                 return QUAD_BASE + QUAD_MONTHLY * requestedMonths;
         }
     }
+    int chooseRandomPayment() {
+        switch (random.nextInt(2)){
+            case 0 : return 0;
+            default: return 1;
+        }
+    }
 
     private void pickRandomRequest() {
         requestedMonths = random.nextInt(6) + 1; // basically one month or six
         String monthText = (requestedMonths == 1) ? "1 month" : requestedMonths + " months";
-
+        int randomPaymentOption = chooseRandomPayment();
         String talk; // before they pick yes
         String transaction; // what they say after you pick yes
+        String paymentChosen;
+        if(randomPaymentOption == 0) {
+            paymentChosen = " Hehe. I'll pay with these things..";
+        } else {
+            paymentChosen = " Heh. I'll pay online.";
+        }
 
         switch(random.nextInt(3)) { // randomizing room request
             case 0:

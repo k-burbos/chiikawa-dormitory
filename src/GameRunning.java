@@ -270,28 +270,41 @@ public class GameRunning extends JFrame{
         }
     }
 
+    int chooseRandomPayment() {
+        switch (random.nextInt(2)){
+            case 0 : return 0;
+            default: return 1;
+        }
+    }
+
     private void pickRandomRequest() {
         requestedMonths = random.nextInt(6) + 1; // basically one month or six
         String monthText = (requestedMonths == 1) ? "1 month" : requestedMonths + " months";
-
+        int randomPaymentOption = chooseRandomPayment();
         String talk; // before they pick yes
         String transaction; // what they say after you pick yes
+        String paymentChosen;
+        if(randomPaymentOption == 0) {
+            paymentChosen = " Mhm! I'll pay in cash!";
+        } else {
+            paymentChosen = " I'll pay online..!";
+        }
 
         switch(random.nextInt(3)) { // randomizing room request
             case 0:
                 requestedRoom = "Single";
                 talk = "Uuww... I'd like a room all to myself!";
-                transaction = "I want one bedroom for " + monthText + "! Uwa!";
+                transaction = "I want one bedroom for " + monthText + "! Uwa!" + paymentChosen;
                 break;
             case 1:
                 requestedRoom = "Double";
                 talk = "Uw.. I'd like to live with my bestfriend, Hachiware!";
-                transaction = "I want two bedrooms for " + monthText + "! Uwa!";
+                transaction = "I want two bedrooms for " + monthText + "! Uwa!" + paymentChosen;
                 break;
             default:
                 requestedRoom = "Quad";
                 talk = "I want to live with three of my friends, Usagi, Rakko and Hachiware!";
-                transaction = "I want four bedrooms for " + monthText + "! Uwa!";
+                transaction = "I want four bedrooms for " + monthText + "! Uwa!" + paymentChosen;
                 break;
         }
 
@@ -521,10 +534,10 @@ public class GameRunning extends JFrame{
         });
 
         noScreen.addMouseListener(new MouseAdapter() {
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            startSpriteLeave(noScreen, lblNo, "BaseScreen");
-        }
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                startSpriteLeave(noScreen, lblNo, "BaseScreen");
+            }
         });
         //yes screen
 
@@ -604,7 +617,7 @@ public class GameRunning extends JFrame{
         transactionScreen.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-              showTransactionDialog();
+                showTransactionDialog();
             }
         });
 
