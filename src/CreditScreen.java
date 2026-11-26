@@ -1,5 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.InputStream;
 import java.net.URL;
 
@@ -13,6 +17,9 @@ public class CreditScreen extends JFrame {
     private JLabel canonigoLbl;
     private JLabel cornejoLbl;
     private JLabel pescaderoLbl;
+    private JLabel gameTitleLbl;
+    private JButton backBtn;
+    private JPanel backPnl;
 
     public CreditScreen(){
 //        cardLayout = new CardLayout();
@@ -20,6 +27,11 @@ public class CreditScreen extends JFrame {
 //        createUIComponents();
 //        cardContainer.add(baseScreen, "BaseScreen");
 //        setContentPane(cardContainer);
+
+        backPnl.setPreferredSize(new Dimension(200, 100));
+        backPnl.setOpaque(false);
+        gameTitleLbl.setFont(loadFont("/Fonts/BaksoSapi.otf", 70f));
+        gameTitleLbl.setForeground(Color.BLACK);
         creditTitleLbl.setFont(loadFont("/Fonts/BaksoSapi.otf", 48f));
         creditTitleLbl.setForeground(Color.BLACK);
         borjaLbl.setFont(loadFont("/Fonts/BaksoSapi.otf", 30f));
@@ -32,16 +44,31 @@ public class CreditScreen extends JFrame {
         cornejoLbl.setForeground(Color.BLACK);
         pescaderoLbl.setFont(loadFont("/Fonts/BaksoSapi.otf", 30f));
         pescaderoLbl.setForeground(Color.BLACK);
+
+        setContentPane(cardContainer);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setSize(1920, 1080);
+        setResizable(false);
+        setTitle("Credits");
+
+        backBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                startScreen.start();
+            }
+        });
+
     }
 
-    public static void main(String[] args) {
-        CreditScreen a = new CreditScreen();
-        a.setContentPane(a.cardContainer);
-        a.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        a.setVisible(true);
-        a.setSize(1920, 1080);
-        a.setTitle("Credits");
-    }
+//    public static void main(String[] args) {
+//        CreditScreen a = new CreditScreen();
+//        a.setContentPane(a.cardContainer);
+//        a.setDefaultCloseOperation(EXIT_ON_CLOSE);
+//        a.setVisible(true);
+//        a.setSize(1920, 1080);
+//        a.setTitle("Credits");
+//    }
 
     private Font loadFont(String path, float size) { // alows using of custom fonts
         try (InputStream in = getClass().getResourceAsStream(path)) {
@@ -78,5 +105,9 @@ public class CreditScreen extends JFrame {
                 g2.dispose();
             }
         };
+    }
+
+    public static void start(){
+        new CreditScreen().setVisible(true);
     }
 }
