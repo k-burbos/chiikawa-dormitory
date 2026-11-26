@@ -122,10 +122,14 @@ public class Admin extends Chiikawas {
     }
 
     public void removeTenant(Tenant tenant, Room[] rooms){
-//        for(Room r: rooms){
-//            if(r != null && r.toString().split(",")[0].equals(tenant.getName())){
-//            }
-//        }
+        if (tenant == null){
+            throw new IllegalArgumentException(
+                    "Tennant cannot be null."
+            );
+        }
+        TenantCsvFileHandler.deleteTenant(
+                tenant.getName()
+        );
     }
 
 }
