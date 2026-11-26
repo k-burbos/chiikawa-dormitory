@@ -89,12 +89,17 @@ public class GameRunning extends JFrame{
         setSize(1920, 1080);
         setResizable(false);
         setTitle("Chiikawa Dormitory");
+
+
     }
 
     private void showTransactionDialog(){
         JRadioButton one = new JRadioButton("Single");
+        one.setActionCommand("Single");
         JRadioButton two = new JRadioButton("Double");
+        two.setActionCommand("Double");
         JRadioButton four = new JRadioButton("Quad");
+        four.setActionCommand("Quad");
         ButtonGroup bedrooms = new ButtonGroup();
         bedrooms.add(one);
         bedrooms.add(two);
@@ -107,7 +112,8 @@ public class GameRunning extends JFrame{
         panel.add(four);
 
         panel.add(new JLabel("How many months?"));
-        panel.add(new JTextField());
+        JTextField tf = new JTextField();
+        panel.add(tf);
 
         int result = JOptionPane.showConfirmDialog(
                 null,
@@ -121,9 +127,11 @@ public class GameRunning extends JFrame{
             cardLayout.show(cardContainer, "ThankScreen");
             System.out.println("User Pressed OK");
             ButtonModel roomChoice = bedrooms.getSelection();
-            if(roomChoice == one){
-
-            }
+//            if(requestedRoom == roomChoice.getActionCommand() && requestedMonths == Integer.parseInt(tf.getText())){
+//
+//            }
+            GameManager.setPoints(GameManager.getPoints() + 1000);
+            System.out.println(String.format("Points: %d", GameManager.getPoints()));
         } else if(result == JOptionPane.CANCEL_OPTION){
             System.out.println("User Pressed Cancel");
         } else {
@@ -476,6 +484,7 @@ public class GameRunning extends JFrame{
                 optnNo.setVisible(false);
                 optnYes.setVisible(false);
                 cardLayout.show(cardContainer, "YesScreen");
+
             }
         });
 
