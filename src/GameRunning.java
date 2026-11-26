@@ -246,7 +246,7 @@ public class GameRunning extends JFrame{
                     lblRent.setVisible(false);
                     JOptionPane.showMessageDialog(
                             this,
-                            "You have no tenants due to leave.",
+                            Admin.endDay(),
                             "Record of Tenants",
                             JOptionPane.PLAIN_MESSAGE
                     );
