@@ -7,6 +7,8 @@ import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.util.ArrayList;
 import java.io.InputStream; // need it for custom font
+import java.util.Enumeration;
+import java.util.InputMismatchException;
 import java.util.Random; // makes each request for a room different
 
 public class GameRunning extends JFrame{
@@ -104,29 +106,86 @@ public class GameRunning extends JFrame{
         panel.add(four);
 
         panel.add(new JLabel("How many months?"));
-        panel.add(new JTextField());
+        JTextField tf = new JTextField();
+        panel.add(tf);
 
-        int result = JOptionPane.showConfirmDialog(
-                null,
-                panel,
-                "Transaction",
-                JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE
-        );
+        JRadioButton cash = new JRadioButton("Cash");
+        JRadioButton online = new JRadioButton("Online");
+        ButtonGroup payments = new ButtonGroup();
+        payments.add(cash);
+        payments.add(online);
 
-        if(result == JOptionPane.OK_OPTION){
-            cardLayout.show(cardContainer, "ThankScreen");
-            System.out.println("User Pressed OK");
-            ButtonModel roomChoice = bedrooms.getSelection();
-            if(roomChoice == one){
+        panel.add(new JLabel("Payment method:"));
+        panel.add(cash);
+        panel.add(online);
 
+        while (true) {
+            int result = JOptionPane.showConfirmDialog(
+                    null,
+                    panel,
+                    "Transaction",
+                    JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.PLAIN_MESSAGE
+            );
+
+            if(result == JOptionPane.CANCEL_OPTION){
+                System.out.println("User Pressed Cancel");
+                return;
+            } else if(result != JOptionPane.OK_OPTION){
+                System.out.println("System Closed without selection");
+                return;
             }
-        } else if(result == JOptionPane.CANCEL_OPTION){
-            System.out.println("User Pressed Cancel");
-        } else {
-            System.out.println("System Closed without selection");
+
+            int months;
+            try {
+                months = Integer.parseInt(tf.getText().trim());
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(panel, "Input a number.");
+                continue;
+            }
+
+            if(months != requestedMonths) {
+                JOptionPane.showMessageDialog(null, "Enter the correct month.");
+                continue;
+            }
+
+            String roomChoice = getSelectedButtonText(bedrooms);
+            if (!requestedRoom.equals(roomChoice)) {
+                JOptionPane.showMessageDialog(null, "Not quite right. Try again.");
+                continue;
+            }
+
+            String paymentChoice = getSelectedButtonText(payments);
+            if (paymentChoice == null) {
+                JOptionPane.showMessageDialog(null, "Choose a payment method.");
+                continue;
+            }
+
+            boolean checkedIn = Admin.checkInTenant(
+                    this,
+                    "Chiikawa",
+                    roomChoice,
+                    months,
+                    getTotalRent(),
+                    paymentChoice
+            );
+
+            if (checkedIn) {
+                cardLayout.show(cardContainer, "ThankScreen");
+            }
+            return;
         }
     }
+
+    private String getSelectedButtonText(ButtonGroup buttonGroup) {
+        for(Enumeration<AbstractButton> buttons = buttonGroup.getElements(); buttons.hasMoreElements();) {
+            AbstractButton button = buttons.nextElement();
+
+            if(button.isSelected()) return button.getText();
+        }
+        return null;
+    }
+
 
     private Rectangle scaled(JComponent p, double x, double y, double w, double h){
         return new Rectangle(
@@ -184,7 +243,7 @@ public class GameRunning extends JFrame{
                     lblRent.setVisible(false);
                     JOptionPane.showMessageDialog(
                             this,
-                            "You have no tenants due to leave.",
+                            Admin.endDay(),
                             "Record of Tenants",
                             JOptionPane.PLAIN_MESSAGE
                     );
@@ -208,28 +267,41 @@ public class GameRunning extends JFrame{
         }
     }
 
+    int chooseRandomPayment() {
+        switch (random.nextInt(2)){
+            case 0 : return 0;
+            default: return 1;
+        }
+    }
+
     private void pickRandomRequest() {
         requestedMonths = random.nextInt(6) + 1; // basically one month or six
         String monthText = (requestedMonths == 1) ? "1 month" : requestedMonths + " months";
-
+        int randomPaymentOption = chooseRandomPayment();
         String talk; // before they pick yes
         String transaction; // what they say after you pick yes
+        String paymentChosen;
+        if(randomPaymentOption == 0) {
+            paymentChosen = " Mhm! I'll pay in cash!";
+        } else {
+            paymentChosen = " I'll pay online..!";
+        }
 
         switch(random.nextInt(3)) { // randomizing room request
             case 0:
                 requestedRoom = "Single";
                 talk = "Uuww... I'd like a room all to myself!";
-                transaction = "I want one bedroom for " + monthText + "! Uwa!";
+                transaction = "I want one bedroom for " + monthText + "! Uwa!" + paymentChosen;
                 break;
             case 1:
                 requestedRoom = "Double";
                 talk = "Uw.. I'd like to live with my bestfriend, Hachiware!";
-                transaction = "I want two bedrooms for " + monthText + "! Uwa!";
+                transaction = "I want two bedrooms for " + monthText + "! Uwa!" + paymentChosen;
                 break;
             default:
                 requestedRoom = "Quad";
                 talk = "I want to live with three of my friends, Usagi, Rakko and Hachiware!";
-                transaction = "I want four bedrooms for " + monthText + "! Uwa!";
+                transaction = "I want four bedrooms for " + monthText + "! Uwa!" + paymentChosen;
                 break;
         }
 
@@ -541,10 +613,10 @@ public class GameRunning extends JFrame{
         });
 
         noScreen.addMouseListener(new MouseAdapter() {
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            startSpriteLeave(noScreen, lblNo, "BaseScreen");
-        }
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                startSpriteLeave(noScreen, lblNo, "BaseScreen");
+            }
         });
         //yes screen
 
@@ -628,7 +700,7 @@ public class GameRunning extends JFrame{
         transactionScreen.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-              showTransactionDialog();
+                showTransactionDialog();
             }
         });
 

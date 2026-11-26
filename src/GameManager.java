@@ -8,7 +8,7 @@ public class GameManager {
     private static final ArrayList<Tenant> tenants = new ArrayList<>();
     private static final ArrayList<Room> rooms = new ArrayList<>();
     private static final Random random = new Random();
-    private static boolean running = true; // Richie, make ur exit button set this to false if pressed
+    private static boolean running = true;
 
     static { // makes it run exactly once
         ChiikawaFactory cf = new ChiikawaFactory();
@@ -36,7 +36,6 @@ public class GameManager {
 
     private static void openNextScreen() {
         if (!running) return;
-
         JFrame screen = pickScreen();
         screen.addWindowListener(new WindowAdapter() {
             @Override
@@ -44,12 +43,11 @@ public class GameManager {
                 openNextScreen();
             }
         });
-
         screen.setVisible(true);
     }
 
     private static JFrame pickScreen() {
-        switch (random.nextInt(7)) {
+        switch (random.nextInt(8)) {
             case 0: return new GameRunning(tenants, rooms);   // Chiikawa
             case 1: return new GameRunning1(tenants, rooms);  // Hachiware
             case 2: return new GameRunning2(tenants, rooms);  // Usagi
