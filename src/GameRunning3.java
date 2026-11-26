@@ -105,38 +105,71 @@ public class GameRunning3 extends JFrame{
         JTextField tf = new JTextField();
         panel.add(tf);
 
-        int result = JOptionPane.showConfirmDialog(
-                null,
-                panel,
-                "Transaction",
-                JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE
-        );
+        JRadioButton cash = new JRadioButton("Cash");
+        JRadioButton online = new JRadioButton("Online");
+        ButtonGroup payments = new ButtonGroup();
+        payments.add(cash);
+        payments.add(online);
 
-        if(result == JOptionPane.OK_OPTION){
-            int months = 0;
-            while(months == 0) {
-                try {
-                    months = Integer.parseInt(tf.getText());
-                } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(panel, "Input a number.");
-                    months = Integer.parseInt(tf.getText());
-                }
+        panel.add(new JLabel("Payment method:"));
+        panel.add(cash);
+        panel.add(online);
+
+        while (true) {
+            int result = JOptionPane.showConfirmDialog(
+                    null,
+                    panel,
+                    "Transaction",
+                    JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.PLAIN_MESSAGE
+            );
+
+            if(result == JOptionPane.CANCEL_OPTION){
+                System.out.println("User Pressed Cancel");
+                return;
+            } else if(result != JOptionPane.OK_OPTION){
+                System.out.println("System Closed without selection");
+                return;
             }
-            while(Integer.compare(months, requestedMonths) != 0) {
-                JOptionPane.showMessageDialog(null, panel, "Enter the correct month.", JOptionPane.OK_OPTION);
-                months = Integer.parseInt(tf.getText());
+
+            int months;
+            try {
+                months = Integer.parseInt(tf.getText().trim());
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(panel, "Input a number.");
+                continue;
             }
+
+            if(months != requestedMonths) {
+                JOptionPane.showMessageDialog(null, "Enter the correct month.");
+                continue;
+            }
+
             String roomChoice = getSelectedButtonText(bedrooms);
-            while (!requestedRoom.equals(roomChoice)) {
-                JOptionPane.showMessageDialog(null, panel, "Not quite right. Try again.", JOptionPane.OK_OPTION);
-                roomChoice = getSelectedButtonText(bedrooms);
+            if (!requestedRoom.equals(roomChoice)) {
+                JOptionPane.showMessageDialog(null, "Not quite right. Try again.");
+                continue;
             }
-            cardLayout.show(cardContainer, "ThankScreen");
-        } else if(result == JOptionPane.CANCEL_OPTION){
-            System.out.println("User Pressed Cancel");
-        } else {
-            System.out.println("System Closed without selection");
+
+            String paymentChoice = getSelectedButtonText(payments);
+            if (paymentChoice == null) {
+                JOptionPane.showMessageDialog(null, "Choose a payment method.");
+                continue;
+            }
+
+            boolean checkedIn = Admin.checkInTenant(
+                    this,
+                    "Momonga",
+                    roomChoice,
+                    months,
+                    getTotalRent(),
+                    paymentChoice
+            );
+
+            if (checkedIn) {
+                cardLayout.show(cardContainer, "ThankScreen");
+            }
+            return;
         }
     }
 
