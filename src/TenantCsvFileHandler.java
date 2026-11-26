@@ -15,13 +15,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Saves and loads tenants and transactions using the Bridge Pattern.
- *
- * abstraction (what is saved):  RecordFile -> TenantFile, TransactionFile
- * implementor (how it is saved): RecordStorage -> CsvStorage, TextStorage
-
- */
 public final class TenantCsvFileHandler {
     // Bridge: change this to new TextStorage() if we want to save .txt files instead
     private static final RecordStorage STORAGE = new CsvStorage();
@@ -44,7 +37,6 @@ public final class TenantCsvFileHandler {
         TRANSACTIONS.initialize();
     }
 
-    // Saves a new tenant or replaces the tenant with the same name.
     public static synchronized void saveTenant(Tenant tenant) {
         TENANTS.save(tenant);
     }
@@ -109,7 +101,6 @@ public final class TenantCsvFileHandler {
 
         void appendRow(Path path, List<String> columns, List<String> row);
     }
-     // Concrete implementor: comma-separated values with quoting.
 
     public static final class CsvStorage implements RecordStorage {
         @Override
@@ -287,7 +278,6 @@ public final class TenantCsvFileHandler {
         }
     }
 
-    // ABSTRACTION: what kind of records a file holds
 
     public abstract static class RecordFile {
         protected final Path path;
