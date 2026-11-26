@@ -55,7 +55,7 @@ public class GameManager {
             case 4: return new GameRunning4(tenants, rooms);  // Furuhonya (crab)
             case 5: return new GameRunning5(tenants, rooms);  // Rakko
             case 6: return new GameRunning6(tenants, rooms);  // Shisa
-            default: return new GameRunning7(tenants, rooms); // Kurimanju
+            default: return new GameRunning(tenants, rooms); // Kurimanju
         }
     }
 }

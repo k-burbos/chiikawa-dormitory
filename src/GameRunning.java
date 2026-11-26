@@ -12,7 +12,7 @@ import java.util.InputMismatchException;
 import java.util.Random; // makes each request for a room different
 
 public class GameRunning extends JFrame{
-    private CardLayout cardLayout;
+    private static CardLayout cardLayout;
     private JPanel cardContainer;
     private JPanel baseScreen;
     private JPanel spriteEnter;
@@ -64,8 +64,6 @@ public class GameRunning extends JFrame{
     private ArrayList<Tenant> Chii;
     private ArrayList<Room> Rooms;
 
-
-
     public GameRunning(ArrayList<Tenant> tenants, ArrayList<Room> rooms){
         new Exception("GameRunning created").printStackTrace();
         this.Chii = tenants;
@@ -92,7 +90,6 @@ public class GameRunning extends JFrame{
         setResizable(false);
         setTitle("Chiikawa Dormitory");
     }
-
     private void showTransactionDialog(){
         JRadioButton one = new JRadioButton("Single");
         JRadioButton two = new JRadioButton("Double");
@@ -353,13 +350,76 @@ public class GameRunning extends JFrame{
         });
     }
 
+//    private void showOption(JPanel panel) {
+//        panel.setLayout(null);
+//        lblOptions = new JLabel("OPTIONS"); // temporary
+//        lblOptions.setFont(bakso.deriveFont(Font.PLAIN, 30f));
+//        lblOptions.setForeground(Color.BLACK);
+//        panel.add(lblOptions);
+//
+//        lblShowRecords = new JLabel("Show Records"); // temporary
+//        lblShowRecords.setFont(bakso.deriveFont(Font.PLAIN, 24f));
+//        lblShowRecords.setForeground(Color.BLACK);
+//        panel.add(lblShowRecords);
+//
+//        lblShowRooms = new JLabel("Show Rooms"); // temporary
+//        lblShowRooms.setFont(bakso.deriveFont(Font.PLAIN, 24f));
+//        lblShowRooms.setForeground(Color.BLACK);
+//        panel.add(lblShowRooms);
+//        panel.addComponentListener(new ComponentAdapter() {
+//            @Override
+//            public void componentResized(ComponentEvent e) {
+//                lblOptions.setBounds(scaled(panel,0.20, 0.46, 0.09, 0.04));
+//                lblShowRecords.setBounds(scaled(panel, 0.19, 0.52, 0.23, 0.06));
+//                lblShowRooms.setBounds(scaled(panel, 0.19, 0.59, 0.23, 0.06));
+//            }
+//        });
+//    }
+
+    private void showOption(JPanel panel) {
+        panel.setLayout(null);
+
+        JLabel lblOptionsLocal = new JLabel("OPTIONS");
+        lblOptionsLocal.setFont(bakso.deriveFont(Font.PLAIN, 30f));
+        lblOptionsLocal.setForeground(Color.BLACK);
+        panel.add(lblOptionsLocal);
+
+        JLabel lblShowRecordsLocal = new JLabel("Show Records");
+        lblShowRecordsLocal.setFont(bakso.deriveFont(Font.PLAIN, 24f));
+        lblShowRecordsLocal.setForeground(Color.BLACK);
+        panel.add(lblShowRecordsLocal);
+
+        JLabel lblShowRoomsLocal = new JLabel("Show Rooms");
+        lblShowRoomsLocal.setFont(bakso.deriveFont(Font.PLAIN, 24f));
+        lblShowRoomsLocal.setForeground(Color.BLACK);
+        panel.add(lblShowRoomsLocal);
+
+        // Set initial bounds
+        lblOptionsLocal.setBounds(scaled(panel, 0.20, 0.46, 0.09, 0.04));
+        lblShowRecordsLocal.setBounds(scaled(panel, 0.19, 0.52, 0.23, 0.06));
+        lblShowRoomsLocal.setBounds(scaled(panel, 0.19, 0.59, 0.23, 0.06));
+
+        // Update bounds on resizes
+        panel.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                lblOptionsLocal.setBounds(scaled(panel, 0.20, 0.46, 0.09, 0.04));
+                lblShowRecordsLocal.setBounds(scaled(panel, 0.19, 0.52, 0.23, 0.06));
+                lblShowRoomsLocal.setBounds(scaled(panel, 0.19, 0.59, 0.23, 0.06));
+            }
+        });
+    }
+
+
     private boolean onX(JPanel p, MouseEvent e){
         return xBtnBounds(p).contains(e.getPoint());
     }
 
     private void createUIComponents() {
+
         // font
         bakso = loadBakso();
+
         // background
         URL bg = getClass().getResource("/Images/Backgrounds/bgBaseScreen.png");
         ImageIcon bgIcon = (bg != null) ? new ImageIcon(bg) : null;
@@ -389,6 +449,9 @@ public class GameRunning extends JFrame{
         URL Xbtn = getClass().getResource("/Images/X.png");
         ImageIcon XbtnIcon = (Xbtn != null) ? new ImageIcon(Xbtn) : null;
 
+        URL pcBtnOptions = getClass().getResource("/Images/Elements/pcBtnOption.png");
+        ImageIcon pcBtnIcon = (pcBtnOptions != null) ? new ImageIcon(pcBtnOptions) : null;
+
         baseScreen = new JPanel(){
 
             protected void paintComponent(Graphics g){
@@ -397,8 +460,12 @@ public class GameRunning extends JFrame{
                 drawImage(g, tableIcon, this, 0, 0, 1, 1);
                 drawImage(g, computerIcon, this, 0, 0, 1, 1);
                 drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
+                drawImage(g, pcBtnIcon, this, 0.12, 0.52, 0.23, 0.06);
+                drawImage(g, pcBtnIcon, this, 0.12, 0.59, 0.23, 0.06);
+
             }
         };
+
 
         baseScreen.addMouseListener(new MouseAdapter() {
             @Override
@@ -420,9 +487,13 @@ public class GameRunning extends JFrame{
                 drawImage(g, tableIcon, this, 0, 0, 1, 1);
                 drawImage(g, computerIcon, this, 0, 0, 1, 1);
                 drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
+                drawImage(g, pcBtnIcon, this, 0.12, 0.52, 0.23, 0.06);
+                drawImage(g, pcBtnIcon, this, 0.12, 0.59, 0.23, 0.06);
 
             }
         };
+
+
 //
         spriteEnter.addMouseListener(new MouseAdapter() {
             @Override
@@ -447,8 +518,12 @@ public class GameRunning extends JFrame{
                     drawImage(g, optionBtnIcon, this, 0.526, 0.787, 0.200, 0.180);
                 }
                 drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
+                drawImage(g, pcBtnIcon, this, 0.12, 0.52, 0.23, 0.06);
+                drawImage(g, pcBtnIcon, this, 0.12, 0.59, 0.23, 0.06);
             }
         };
+
+
 
         spriteTalks.setLayout(null);
 
@@ -514,9 +589,13 @@ public class GameRunning extends JFrame{
                 drawImage(g, chatHeadIcon, this, 0.136, -0.074, 0.585, 0.644);
                 drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
                 if(!leaving) drawImage(g, chatHeadIcon, this, 0.136, -0.074, 0.585, 0.644);
+                drawImage(g, pcBtnIcon, this, 0.12, 0.52, 0.23, 0.06);
+                drawImage(g, pcBtnIcon, this, 0.12, 0.59, 0.23, 0.06);
 
             }
         };
+
+
 
         noScreen.setLayout(null);
         lblNo = new JLabel(bubbleText("...uww..."));
@@ -560,6 +639,8 @@ public class GameRunning extends JFrame{
                 drawImage(g, computerIcon, this, 0, 0, 1, 1);
                 drawImage(g, chatHeadIcon, this, 0.136, -0.074, 0.585, 0.644);
                 drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
+                drawImage(g, pcBtnIcon, this, 0.12, 0.52, 0.23, 0.06);
+                drawImage(g, pcBtnIcon, this, 0.12, 0.59, 0.23, 0.06);
             }
         };
 
@@ -596,6 +677,8 @@ public class GameRunning extends JFrame{
                 drawImage(g, computerIcon, this, 0, 0, 1, 1);
                 drawImage(g, chatHeadIcon, this, 0.136, -0.074, 0.585, 0.644);
                 drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
+                drawImage(g, pcBtnIcon, this, 0.12, 0.52, 0.23, 0.06);
+                drawImage(g, pcBtnIcon, this, 0.12, 0.59, 0.23, 0.06);
             }
         };
 
@@ -632,6 +715,8 @@ public class GameRunning extends JFrame{
                 drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
 
                 if (!leaving) drawImage(g, chatHeadIcon, this, 0.136, -0.074, 0.585, 0.644);
+                drawImage(g, pcBtnIcon, this, 0.12, 0.52, 0.23, 0.06);
+                drawImage(g, pcBtnIcon, this, 0.12, 0.59, 0.23, 0.06);
             }
         };
 
@@ -664,6 +749,8 @@ public class GameRunning extends JFrame{
                 drawImage(g, tableIcon, this, 0, 0, 1, 1);
                 drawImage(g, computerIcon, this, 0, 0, 1, 1);
                 drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
+                drawImage(g, pcBtnIcon, this, 0.12, 0.52, 0.23, 0.06);
+                drawImage(g, pcBtnIcon, this, 0.12, 0.59, 0.23, 0.06);
             }
         };
 
@@ -695,11 +782,17 @@ public class GameRunning extends JFrame{
                 drawImage(g, tableIcon, this, 0, 0, 1, 1);
                 drawImage(g, computerIcon, this, 0, 0, 1, 1);
                 drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
+                drawImage(g, pcBtnIcon, this, 0.12, 0.52, 0.23, 0.06);
+                drawImage(g, pcBtnIcon, this, 0.12, 0.59, 0.23, 0.06);
             }
         };
 
         JPanel[] screens = {baseScreen, spriteEnter, spriteTalks, noScreen,
                 yesScreen, transactionScreen, thankScreen, rentScreen, dayOverScreen};
+
+        for(JPanel sc: screens){
+            showOption(sc);
+        }
 
         for(JPanel s:screens){
             addXClick(s, ()-> {
@@ -710,5 +803,7 @@ public class GameRunning extends JFrame{
                 dispose();
             });
         }
+
+
     }
 }
