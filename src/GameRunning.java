@@ -7,6 +7,8 @@ import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.util.ArrayList;
 import java.io.InputStream; // need it for custom font
+import java.util.Enumeration;
+import java.util.InputMismatchException;
 import java.util.Random; // makes each request for a room different
 
 public class GameRunning extends JFrame{
@@ -124,20 +126,41 @@ public class GameRunning extends JFrame{
         );
 
         if(result == JOptionPane.OK_OPTION){
+            int months = 0;
+            while(months == 0) {
+                try {
+                    months = Integer.parseInt(tf.getText());
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(panel, "Input a number.");
+                    months = Integer.parseInt(tf.getText());
+                }
+            }
+            while(Integer.compare(months, requestedMonths) != 0) {
+                JOptionPane.showMessageDialog(null, panel, "Enter the correct month.", JOptionPane.OK_OPTION);
+                months = Integer.parseInt(tf.getText());
+            }
+            String roomChoice = getSelectedButtonText(bedrooms);
+            while (!requestedRoom.equals(roomChoice)) {
+                JOptionPane.showMessageDialog(null, panel, "Not quite right. Try again.", JOptionPane.OK_OPTION);
+                roomChoice = getSelectedButtonText(bedrooms);
+            }
             cardLayout.show(cardContainer, "ThankScreen");
-            System.out.println("User Pressed OK");
-            ButtonModel roomChoice = bedrooms.getSelection();
-//            if(requestedRoom == roomChoice.getActionCommand() && requestedMonths == Integer.parseInt(tf.getText())){
-//
-//            }
-            GameManager.setPoints(GameManager.getPoints() + 1000);
-            System.out.println(String.format("Points: %d", GameManager.getPoints()));
         } else if(result == JOptionPane.CANCEL_OPTION){
             System.out.println("User Pressed Cancel");
         } else {
             System.out.println("System Closed without selection");
         }
     }
+
+    private String getSelectedButtonText(ButtonGroup buttonGroup) {
+        for(Enumeration<AbstractButton> buttons = buttonGroup.getElements(); buttons.hasMoreElements();) {
+            AbstractButton button = buttons.nextElement();
+
+            if(button.isSelected()) return button.getText();
+        }
+        return null;
+    }
+
 
     private Rectangle scaled(JComponent p, double x, double y, double w, double h){
         return new Rectangle(
@@ -470,10 +493,10 @@ public class GameRunning extends JFrame{
         });
 
         noScreen.addMouseListener(new MouseAdapter() {
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            startSpriteLeave(noScreen, lblNo, "BaseScreen");
-        }
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                startSpriteLeave(noScreen, lblNo, "BaseScreen");
+            }
         });
         //yes screen
 
@@ -554,7 +577,7 @@ public class GameRunning extends JFrame{
         transactionScreen.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-              showTransactionDialog();
+                showTransactionDialog();
             }
         });
 

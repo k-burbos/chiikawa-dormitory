@@ -8,8 +8,12 @@ public class GameManager {
     private static final ArrayList<Tenant> tenants = new ArrayList<>();
     private static final ArrayList<Room> rooms = new ArrayList<>();
     private static final Random random = new Random();
+<<<<<<< HEAD
     private static boolean running = true; // Richie, make ur exit button set this to false if pressed
     private static int points = 0;
+=======
+    private static boolean running = true;
+>>>>>>> a1145869e5229f01e3a3f9b5b856858b53d07793
 
     static { // makes it run exactly once
         ChiikawaFactory cf = new ChiikawaFactory();
@@ -45,6 +49,7 @@ public class GameManager {
 
     private static void openNextScreen() {
         if (!running) return;
+<<<<<<< HEAD
         try{
             JFrame screen = pickScreen();
             screen.addWindowListener(new WindowAdapter() {
@@ -79,5 +84,28 @@ public class GameManager {
 //            case 6: return new GameRunning6(tenants, rooms);  // Shisa
 //            default: return new GameRunning7(tenants, rooms); // Kurimanju
 //        }
+=======
+        JFrame screen = pickScreen();
+        screen.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) { // basically if the gamescreen ends, load another
+                openNextScreen();
+            }
+        });
+        screen.setVisible(true);
+    }
+
+    private static JFrame pickScreen() {
+        switch (random.nextInt(8)) {
+            case 0: return new GameRunning(tenants, rooms);   // Chiikawa
+            case 1: return new GameRunning1(tenants, rooms);  // Hachiware
+            case 2: return new GameRunning2(tenants, rooms);  // Usagi
+            case 3: return new GameRunning3(tenants, rooms);  // Momonga
+            case 4: return new GameRunning4(tenants, rooms);  // Furuhonya (crab)
+            case 5: return new GameRunning5(tenants, rooms);  // Rakko
+            case 6: return new GameRunning6(tenants, rooms);  // Shisa
+            default: return new GameRunning(tenants, rooms); // Kurimanju
+        }
+>>>>>>> a1145869e5229f01e3a3f9b5b856858b53d07793
     }
 }
