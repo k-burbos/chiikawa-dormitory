@@ -105,38 +105,71 @@ public class GameRunning2 extends JFrame{
         JTextField tf = new JTextField();
         panel.add(tf);
 
-        int result = JOptionPane.showConfirmDialog(
-                null,
-                panel,
-                "Transaction",
-                JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE
-        );
+        JRadioButton cash = new JRadioButton("Cash");
+        JRadioButton online = new JRadioButton("Online");
+        ButtonGroup payments = new ButtonGroup();
+        payments.add(cash);
+        payments.add(online);
 
-        if(result == JOptionPane.OK_OPTION){
-            int months = 0;
-            while(months == 0) {
-                try {
-                    months = Integer.parseInt(tf.getText());
-                } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(panel, "Input a number.");
-                    months = Integer.parseInt(tf.getText());
-                }
+        panel.add(new JLabel("Payment method:"));
+        panel.add(cash);
+        panel.add(online);
+
+        while (true) {
+            int result = JOptionPane.showConfirmDialog(
+                    null,
+                    panel,
+                    "Transaction",
+                    JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.PLAIN_MESSAGE
+            );
+
+            if(result == JOptionPane.CANCEL_OPTION){
+                System.out.println("User Pressed Cancel");
+                return;
+            } else if(result != JOptionPane.OK_OPTION){
+                System.out.println("System Closed without selection");
+                return;
             }
-            while(Integer.compare(months, requestedMonths) != 0) {
-                JOptionPane.showMessageDialog(null, panel, "Enter the correct month.", JOptionPane.OK_OPTION);
-                months = Integer.parseInt(tf.getText());
+
+            int months;
+            try {
+                months = Integer.parseInt(tf.getText().trim());
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(panel, "Input a number.");
+                continue;
             }
+
+            if(months != requestedMonths) {
+                JOptionPane.showMessageDialog(null, "Enter the correct month.");
+                continue;
+            }
+
             String roomChoice = getSelectedButtonText(bedrooms);
-            while (!requestedRoom.equals(roomChoice)) {
-                JOptionPane.showMessageDialog(null, panel, "Not quite right. Try again.", JOptionPane.OK_OPTION);
-                roomChoice = getSelectedButtonText(bedrooms);
+            if (!requestedRoom.equals(roomChoice)) {
+                JOptionPane.showMessageDialog(null, "Not quite right. Try again.");
+                continue;
             }
-            cardLayout.show(cardContainer, "ThankScreen");
-        } else if(result == JOptionPane.CANCEL_OPTION){
-            System.out.println("User Pressed Cancel");
-        } else {
-            System.out.println("System Closed without selection");
+
+            String paymentChoice = getSelectedButtonText(payments);
+            if (paymentChoice == null) {
+                JOptionPane.showMessageDialog(null, "Choose a payment method.");
+                continue;
+            }
+
+            boolean checkedIn = Admin.checkInTenant(
+                    this,
+                    "Usagi",
+                    roomChoice,
+                    months,
+                    getTotalRent(),
+                    paymentChoice
+            );
+
+            if (checkedIn) {
+                cardLayout.show(cardContainer, "ThankScreen");
+            }
+            return;
         }
     }
 
@@ -205,7 +238,7 @@ public class GameRunning2 extends JFrame{
                     lblRent.setVisible(false);
                     JOptionPane.showMessageDialog(
                             this,
-                            "You have no tenants due to leave.",
+                            Admin.endDay(),
                             "Record of Tenants",
                             JOptionPane.PLAIN_MESSAGE
                     );
@@ -229,28 +262,40 @@ public class GameRunning2 extends JFrame{
         }
     }
 
+    int chooseRandomPayment() {
+        switch (random.nextInt(2)){
+            case 0 : return 0;
+            default: return 1;
+        }
+    }
     private void pickRandomRequest() {
         requestedMonths = random.nextInt(6) + 1; // basically one month or six
         String monthText = (requestedMonths == 1) ? "1 month" : requestedMonths + " months";
-
+        int randomPaymentOption = chooseRandomPayment();
         String talk; // before they pick yes
         String transaction; // what they say after you pick yes
+        String paymentChosen;
+        if(randomPaymentOption == 0) {
+            paymentChosen = " Yaha (cash)";
+        } else {
+            paymentChosen = " Una (online)";
+        }
 
         switch(random.nextInt(3)) { // randomizing room request
             case 0:
                 requestedRoom = "Single";
                 talk = "Una yaha yaha! (One. For me)";
-                transaction = "Yaha yaha! (" + monthText + ")!";
+                transaction = "Yaha yaha! (" + monthText + ")!" + paymentChosen;
                 break;
             case 1:
                 requestedRoom = "Double";
                 talk = "Prrttt yahha yahha! (Two. With Chiikawa)";
-                transaction = "Una nya! (" + monthText + ")!";
+                transaction = "Una nya! (" + monthText + ")!" + paymentChosen;
                 break;
             default:
                 requestedRoom = "Quad";
                 talk = "U u uyaha prrtya! (Four. With Chiikawa, Hachiware, and Rakko)";
-                transaction = "Yaha una! (" + monthText + ")!";
+                transaction = "Yaha una! (" + monthText + ")!" + paymentChosen;
                 break;
         }
 
@@ -299,6 +344,40 @@ public class GameRunning2 extends JFrame{
         });
     }
 
+    private void showOption(JPanel panel) {
+        panel.setLayout(null);
+
+        JLabel lblOptionsLocal = new JLabel("OPTIONS");
+        lblOptionsLocal.setFont(bakso.deriveFont(Font.PLAIN, 30f));
+        lblOptionsLocal.setForeground(Color.BLACK);
+        panel.add(lblOptionsLocal);
+
+        JLabel lblShowRecordsLocal = new JLabel("Show Records");
+        lblShowRecordsLocal.setFont(bakso.deriveFont(Font.PLAIN, 24f));
+        lblShowRecordsLocal.setForeground(Color.BLACK);
+        panel.add(lblShowRecordsLocal);
+
+        JLabel lblShowRoomsLocal = new JLabel("Show Rooms");
+        lblShowRoomsLocal.setFont(bakso.deriveFont(Font.PLAIN, 24f));
+        lblShowRoomsLocal.setForeground(Color.BLACK);
+        panel.add(lblShowRoomsLocal);
+
+        // Set initial bounds
+        lblOptionsLocal.setBounds(scaled(panel, 0.20, 0.46, 0.09, 0.04));
+        lblShowRecordsLocal.setBounds(scaled(panel, 0.19, 0.52, 0.23, 0.06));
+        lblShowRoomsLocal.setBounds(scaled(panel, 0.19, 0.59, 0.23, 0.06));
+
+        // Update bounds on resize
+        panel.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                lblOptionsLocal.setBounds(scaled(panel, 0.20, 0.46, 0.09, 0.04));
+                lblShowRecordsLocal.setBounds(scaled(panel, 0.19, 0.52, 0.23, 0.06));
+                lblShowRoomsLocal.setBounds(scaled(panel, 0.19, 0.59, 0.23, 0.06));
+            }
+        });
+    }
+
     private boolean onX(JPanel p, MouseEvent e){
         return xBtnBounds(p).contains(e.getPoint());
     }
@@ -335,6 +414,9 @@ public class GameRunning2 extends JFrame{
         URL Xbtn = getClass().getResource("/Images/X.png");
         ImageIcon XbtnIcon = (Xbtn != null) ? new ImageIcon(Xbtn) : null;
 
+        URL pcBtnOptions = getClass().getResource("/Images/Elements/pcBtnOption.png");
+        ImageIcon pcBtnIcon = (pcBtnOptions != null) ? new ImageIcon(pcBtnOptions) : null;
+
         baseScreen = new JPanel(){
 
             protected void paintComponent(Graphics g){
@@ -343,6 +425,8 @@ public class GameRunning2 extends JFrame{
                 drawImage(g, tableIcon, this, 0, 0, 1, 1);
                 drawImage(g, computerIcon, this, 0, 0, 1, 1);
                 drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
+                drawImage(g, pcBtnIcon, this, 0.12, 0.52, 0.23, 0.06);
+                drawImage(g, pcBtnIcon, this, 0.12, 0.59, 0.23, 0.06);
             }
         };
 
@@ -365,6 +449,8 @@ public class GameRunning2 extends JFrame{
                 drawImage(g, tableIcon, this, 0, 0, 1, 1);
                 drawImage(g, computerIcon, this, 0, 0, 1, 1);
                 drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
+                drawImage(g, pcBtnIcon, this, 0.12, 0.52, 0.23, 0.06);
+                drawImage(g, pcBtnIcon, this, 0.12, 0.59, 0.23, 0.06);
 
             }
         };
@@ -392,6 +478,8 @@ public class GameRunning2 extends JFrame{
                     drawImage(g, optionBtnIcon, this, 0.224, 0.787, 0.200, 0.180);
                     drawImage(g, optionBtnIcon, this, 0.526, 0.787, 0.200, 0.180);
                 }
+                drawImage(g, pcBtnIcon, this, 0.12, 0.52, 0.23, 0.06);
+                drawImage(g, pcBtnIcon, this, 0.12, 0.59, 0.23, 0.06);
             }
         };
 
@@ -457,6 +545,8 @@ public class GameRunning2 extends JFrame{
                 drawImage(g, computerIcon, this, 0, 0, 1, 1);
                 if(!leaving) drawImage(g, chatHeadIcon, this, 0.136, -0.074, 0.585, 0.644);
                 drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
+                drawImage(g, pcBtnIcon, this, 0.12, 0.52, 0.23, 0.06);
+                drawImage(g, pcBtnIcon, this, 0.12, 0.59, 0.23, 0.06);
             }
         };
 
@@ -502,6 +592,8 @@ public class GameRunning2 extends JFrame{
                 drawImage(g, computerIcon, this, 0, 0, 1, 1);
                 drawImage(g, chatHeadIcon, this, 0.136, -0.074, 0.585, 0.644);
                 drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
+                drawImage(g, pcBtnIcon, this, 0.12, 0.52, 0.23, 0.06);
+                drawImage(g, pcBtnIcon, this, 0.12, 0.59, 0.23, 0.06);
             }
         };
 
@@ -538,6 +630,8 @@ public class GameRunning2 extends JFrame{
                 drawImage(g, computerIcon, this, 0, 0, 1, 1);
                 drawImage(g, chatHeadIcon, this, 0.136, -0.074, 0.585, 0.644);
                 drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
+                drawImage(g, pcBtnIcon, this, 0.12, 0.52, 0.23, 0.06);
+                drawImage(g, pcBtnIcon, this, 0.12, 0.59, 0.23, 0.06);
             }
         };
 
@@ -572,6 +666,8 @@ public class GameRunning2 extends JFrame{
                 drawImage(g, computerIcon, this, 0, 0, 1, 1);
                 if (!leaving) drawImage(g, chatHeadIcon, this, 0.136, -0.074, 0.585, 0.644);
                 drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
+                drawImage(g, pcBtnIcon, this, 0.12, 0.52, 0.23, 0.06);
+                drawImage(g, pcBtnIcon, this, 0.12, 0.59, 0.23, 0.06);
             }
         };
 
@@ -604,6 +700,8 @@ public class GameRunning2 extends JFrame{
                 drawImage(g, tableIcon, this, 0, 0, 1, 1);
                 drawImage(g, computerIcon, this, 0, 0, 1, 1);
                 drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
+                drawImage(g, pcBtnIcon, this, 0.12, 0.52, 0.23, 0.06);
+                drawImage(g, pcBtnIcon, this, 0.12, 0.59, 0.23, 0.06);
             }
         };
 
@@ -635,11 +733,17 @@ public class GameRunning2 extends JFrame{
                 drawImage(g, tableIcon, this, 0, 0, 1, 1);
                 drawImage(g, computerIcon, this, 0, 0, 1, 1);
                 drawImage(g, XbtnIcon, this, 0.95, 0.02, 0.03, 0.05);
+                drawImage(g, pcBtnIcon, this, 0.12, 0.52, 0.23, 0.06);
+                drawImage(g, pcBtnIcon, this, 0.12, 0.59, 0.23, 0.06);
             }
         };
 
         JPanel[] screens = {baseScreen, spriteEnter, spriteTalks, noScreen,
                 yesScreen, transactionScreen, thankScreen, rentScreen, dayOverScreen};
+
+        for(JPanel sc: screens){
+            showOption(sc);
+        }
 
         for(JPanel s:screens){
             addXClick(s, ()-> {
