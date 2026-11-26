@@ -7,6 +7,7 @@ import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.util.ArrayList;
 import java.io.InputStream; // need it for custom font
+import java.util.Enumeration;
 import java.util.Random; // makes each request for a room different
 
 public class GameRunning3 extends JFrame{
@@ -101,7 +102,8 @@ public class GameRunning3 extends JFrame{
         panel.add(four);
 
         panel.add(new JLabel("How many months?"));
-        panel.add(new JTextField());
+        JTextField tf = new JTextField();
+        panel.add(tf);
 
         int result = JOptionPane.showConfirmDialog(
                 null,
@@ -112,17 +114,39 @@ public class GameRunning3 extends JFrame{
         );
 
         if(result == JOptionPane.OK_OPTION){
-            cardLayout.show(cardContainer, "ThankScreen");
-            System.out.println("User Pressed OK");
-            ButtonModel roomChoice = bedrooms.getSelection();
-            if(roomChoice == one){
-
+            int months = 0;
+            while(months == 0) {
+                try {
+                    months = Integer.parseInt(tf.getText());
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(panel, "Input a number.");
+                    months = Integer.parseInt(tf.getText());
+                }
             }
+            while(Integer.compare(months, requestedMonths) != 0) {
+                JOptionPane.showMessageDialog(null, panel, "Enter the correct month.", JOptionPane.OK_OPTION);
+                months = Integer.parseInt(tf.getText());
+            }
+            String roomChoice = getSelectedButtonText(bedrooms);
+            while (!requestedRoom.equals(roomChoice)) {
+                JOptionPane.showMessageDialog(null, panel, "Not quite right. Try again.", JOptionPane.OK_OPTION);
+                roomChoice = getSelectedButtonText(bedrooms);
+            }
+            cardLayout.show(cardContainer, "ThankScreen");
         } else if(result == JOptionPane.CANCEL_OPTION){
             System.out.println("User Pressed Cancel");
         } else {
             System.out.println("System Closed without selection");
         }
+    }
+
+    private String getSelectedButtonText(ButtonGroup buttonGroup) {
+        for(Enumeration<AbstractButton> buttons = buttonGroup.getElements(); buttons.hasMoreElements();) {
+            AbstractButton button = buttons.nextElement();
+
+            if(button.isSelected()) return button.getText();
+        }
+        return null;
     }
 
     private Rectangle scaled(JComponent p, double x, double y, double w, double h){
