@@ -1,8 +1,6 @@
-import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import java.awt.Component;
 import java.awt.GridLayout;
@@ -136,101 +134,23 @@ public class Admin extends Chiikawas {
 
         TenantCsvFileHandler.deleteTenant(tenant.getName());
     }
-
-    public static boolean showCheckInDialog(
+    public static boolean checkInTenant(
             Component parent,
             String tenantName,
-            String requestedRoom,
-            int requestedMonths,
-            int totalRent
+            String room,
+            int months,
+            int totalRent,
+            String paymentMethod
     ) {
-        JRadioButton single = new JRadioButton("Single");
-        JRadioButton doubleRoom = new JRadioButton("Double");
-        JRadioButton quad = new JRadioButton("Quad");
-        ButtonGroup rooms = new ButtonGroup();
-        rooms.add(single);
-        rooms.add(doubleRoom);
-        rooms.add(quad);
-
-        JTextField monthsField = new JTextField();
-
-        JRadioButton cash = new JRadioButton("Cash");
-        JRadioButton online = new JRadioButton("Online");
-        ButtonGroup payments = new ButtonGroup();
-        payments.add(cash);
-        payments.add(online);
-
-        JPanel panel = new JPanel(new GridLayout(0, 1));
-        panel.add(new JLabel("Choose number of bedrooms:"));
-        panel.add(single);
-        panel.add(doubleRoom);
-        panel.add(quad);
-        panel.add(new JLabel("How many months?"));
-        panel.add(monthsField);
-        panel.add(new JLabel("Payment method:"));
-        panel.add(cash);
-        panel.add(online);
-
-        int result = JOptionPane.showConfirmDialog(
-                parent,
-                panel,
-                "Transaction",
-                JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE
-        );
-
-        if (result != JOptionPane.OK_OPTION) {
-            return false;
-        }
-
-        String chosenRoom = single.isSelected() ? "Single"
-                : doubleRoom.isSelected() ? "Double"
-                : quad.isSelected() ? "Quad"
-                : null;
-
-        if (chosenRoom == null) {
-            showError(parent, "Please choose a room type.");
-            return false;
-        }
-
-        int chosenMonths;
-        try {
-            chosenMonths = Integer.parseInt(monthsField.getText().trim());
-        } catch (NumberFormatException exception) {
-            showError(parent, "Months must be a whole number.");
-            return false;
-        }
-
-        if (chosenMonths <= 0) {
-            showError(parent, "Months must be greater than zero.");
-            return false;
-        }
-
-        Payment payment = cash.isSelected() ? new Cash()
-                : online.isSelected() ? new Online()
-                : null;
-
-        if (payment == null) {
-            showError(parent, "Please choose a payment method.");
-            return false;
-        }
-
-        if (!chosenRoom.equals(requestedRoom)
-                || chosenMonths != requestedMonths) {
-            showError(
-                    parent,
-                    tenantName + " asked for a " + requestedRoom
-                            + " room for " + requestedMonths
-                            + (requestedMonths == 1 ? " month." : " months.")
-            );
-            return false;
-        }
+        Payment payment = "Online".equals(paymentMethod)
+                ? new Online()
+                : new Cash();
 
         try {
             Tenant tenant = DORM_HEAD.createTenant(
                     tenantName,
-                    bedsFor(chosenRoom),
-                    chosenMonths
+                    bedsFor(room),
+                    months
             );
             DORM_HEAD.setBill(tenant, totalRent);
             tenant.payRent(totalRent, payment);
@@ -243,6 +163,7 @@ public class Admin extends Chiikawas {
             return false;
         }
     }
+
 
     /**
      * Ends the day: tenants with no months left move out, and everyone else
