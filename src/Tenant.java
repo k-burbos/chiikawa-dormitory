@@ -130,32 +130,20 @@ public class Tenant extends Chiikawas {
                 bill;
     }
 
-    public void requestMaintenance() {
-    }
 
     public static class Chiikawa extends Tenant {
-        public Chiikawa(Room roomNumber) {
-            super("Chiikawa", roomNumber);
-        }
-
         public Chiikawa() {
             super("Chiikawa");
         }
     }
 
     public static class Furuhonya extends Tenant {
-        public Furuhonya(Room roomNumber) {
-            super("Furuhonya", roomNumber);
-        }
         public Furuhonya() {
             super("Furuhonya");
         }
     }
 
     public static class Rakko extends Tenant {
-        public Rakko(Room roomNumber) {
-            super("Rakko", roomNumber);
-        }
 
         public Rakko() {
             super("Rakko");
@@ -163,10 +151,6 @@ public class Tenant extends Chiikawas {
     }
 
     public static class Kurimanju extends Tenant {
-        public Kurimanju(Room roomNumber) {
-            super("Kurimanju", roomNumber);
-        }
-
         public Kurimanju() {
             super("Kurimanju");
         }
