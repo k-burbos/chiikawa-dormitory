@@ -1,4 +1,4 @@
-# chiikawa-dormitory 
+﻿﻿# chiikawa-dormitory
 
 --------------------------------------------------------------------------------- 
 ## Team Members
@@ -6,7 +6,7 @@ BORJA, Rich Andrea
 BURBOS, Keara Abigael  
 CANONIGO, Catherine  
 CORNEJO, Joseph Howard  
-PESCADERO, Stephen John 
+PESCADERO, Stephen John
 
 ------------------------------------------------------------------------------
 
@@ -21,7 +21,7 @@ PESCADERO, Stephen John
 It is a Chiikawa dormitory game which uses the four principles of object-oriented programming. 
 Inheritance, as the class "Chiikawas" allows the inheritance of its name. Polymorphism, Abstraction, and Encapsulation.
 
-Players will work as a dormitory head, keeping track of available rooms, bills, maintenance, and their adorable tenants. 
+Players will work as a dormitory head, keeping track of available rooms, bills, maintenance, and their adorable tenants.
 
 A class named "Chiikawas" will contain the private name and age of the tenant, as well as be the base class for the Tenants.
 There are currently eight tenants to meet: Chiikawa, Hachiware, Usagi, Momonga, Kurimanju, Shisa, Rakko, and Furuhonya.
@@ -32,11 +32,11 @@ It is your job to manage, handle, and administer the dormitory!
 
 -----
 
-## Documentation 
+## Documentation
 ### November 12, 2026
 
 We made the initial codes for all of the classes, named:
-- Chiikawas 
+- Chiikawas
   - Tenant
     - Chiikawa
     - Hachiware
@@ -62,7 +62,7 @@ alongside the title above it.
 </div>
 
 ### November 15, 2026
-- The start sreen and the three buttons (play, exit, credits) were made and added.  
+- The start sreen and the three buttons (play, exit, credits) were made and added.
 - Added Chiikawa sprite.
 
 ### November 18, 2026
@@ -70,9 +70,30 @@ alongside the title above it.
 - added necessary elements
 
 ### November 19, 2026
-- added option pane 
-- added connection between start screen and game screen
-- edited Room class
-- edited functions in the game screen
+- Added JOption pane
+- Added connection between start screen and game screen, and start screen and credit screen.
+- Edited Room class
+- Edited functions in the game screen
+- Added ChiikawaFactory, Creational Design Pattern 
 
- 
+### November 23, 2026
+- finished partial game screen
+- finished all sprites for the game
+
+### November 24, 2026
+- added glide up and glide down animations to Chiikawa enter and leave.
+- added textbox square
+
+### November 25, 2026
+- Finished file handling. 
+
+### November 26, 2026
+- Added logic to points system 
+- Added error handling to Transaction input
+- Added Decorator, first Structural Design Pattern 
+- Added Bridge, second Structural Design Pattern
+- Added option buttons on the computer
+- Added online/cash payment dialogue options
+- Updated class diagram
+- Implemented the dialogue into admin from gamerunning.
+- Connected the filehandling to each and every one of Gamerunning.java - Gamerunning7.java.
