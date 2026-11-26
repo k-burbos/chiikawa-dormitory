@@ -11,6 +11,14 @@ public class Room {
         ++roomNumber;
     }
 
+    public int getTenantSize(){
+        return isAvailable.size();
+    }
+
+    public void setTenants(List<Tenant> l){
+        isAvailable = l;
+    }
+
     public static class singleRoom extends Room {
         public singleRoom() {
             super(1);

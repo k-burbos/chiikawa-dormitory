@@ -66,7 +66,7 @@ public class GameRunning extends JFrame{
 
 
 
-    public GameRunning(ArrayList<Tenant> tenants, ArrayList<Room> rooms){
+    public GameRunning(ArrayList<Tenant> tenants, ArrayList<Room> rooms) throws Exception{
         new Exception("GameRunning created").printStackTrace();
         this.Chii = tenants;
         this.Rooms = rooms;
@@ -95,7 +95,7 @@ public class GameRunning extends JFrame{
 
     }
 
-    private void showTransactionDialog(){
+    private void showTransactionDialog() throws Exception{
         JRadioButton one = new JRadioButton("Single");
         one.setActionCommand("Single");
         JRadioButton two = new JRadioButton("Double");
@@ -145,6 +145,13 @@ public class GameRunning extends JFrame{
                 roomChoice = getSelectedButtonText(bedrooms);
             }
             cardLayout.show(cardContainer, "ThankScreen");
+            if(requestedMonths == months && roomChoice == requestedRoom){
+                GameManager.rooms.get(GameManager.getRoom(requestedRoom)).setTenants(Chii);
+                GameManager.setPoints(GameManager.getPoints() + 1000);
+            } else{
+                GameManager.setPoints(GameManager.getPoints() - 2000);
+                if(GameManager.getPoints() < 0) throw new Exception("Game Over");
+            }
         } else if(result == JOptionPane.CANCEL_OPTION){
             System.out.println("User Pressed Cancel");
         } else {
@@ -254,16 +261,23 @@ public class GameRunning extends JFrame{
                 requestedRoom = "Single";
                 talk = "Uuww... I'd like a room all to myself!";
                 transaction = "I want one bedroom for " + monthText + "! Uwa!";
+                Chii.add(GameManager.getTenant(0));
                 break;
             case 1:
                 requestedRoom = "Double";
                 talk = "Uw.. I'd like to live with my bestfriend, Hachiware!";
                 transaction = "I want two bedrooms for " + monthText + "! Uwa!";
+                Chii.add(GameManager.getTenant(0));
+                Chii.add(GameManager.getTenant(1));
                 break;
             default:
                 requestedRoom = "Quad";
                 talk = "I want to live with three of my friends, Usagi, Rakko and Hachiware!";
                 transaction = "I want four bedrooms for " + monthText + "! Uwa!";
+                Chii.add(GameManager.getTenant(0));
+                Chii.add(GameManager.getTenant(1));
+                Chii.add(GameManager.getTenant(2));
+                Chii.add(GameManager.getTenant(4));
                 break;
         }
 
@@ -316,7 +330,7 @@ public class GameRunning extends JFrame{
         return xBtnBounds(p).contains(e.getPoint());
     }
 
-    private void createUIComponents() {
+    private void createUIComponents() throws Exception{
         // font
         bakso = loadBakso();
         // background
@@ -503,6 +517,12 @@ public class GameRunning extends JFrame{
         optnYes.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                if(GameManager.rooms.get(GameManager.getRoom(requestedRoom)).getTenantSize() != 0){
+                    GameManager.setPoints(GameManager.getPoints() - 2000);
+//
+//                    JPanel roomOccupied = new JPanel();
+//                    add some
+                }
                 showOption = false;
                 optnNo.setVisible(false);
                 optnYes.setVisible(false);
@@ -577,7 +597,11 @@ public class GameRunning extends JFrame{
         transactionScreen.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                showTransactionDialog();
+                try {
+                    showTransactionDialog();
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
 
